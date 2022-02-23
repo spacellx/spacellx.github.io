@@ -145,6 +145,412 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/" class="post-title-link" itemprop="url">docker高级篇</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-02-23 22:19:21 / 修改时间：22:20:36" itemprop="dateCreated datePublished" datetime="2022-02-23T22:19:21+08:00">2022-02-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="高级篇"><a href="#高级篇" class="headerlink" title="高级篇"></a>高级篇</h1><h2 id="1、docker复杂安装详说"><a href="#1、docker复杂安装详说" class="headerlink" title="1、docker复杂安装详说"></a>1、docker复杂安装详说</h2><p>mysql的主从复制：指数据可以从一个MySQL数据库服务器主节点复制到一个或多个从节点。</p>
+<p>优点：主库故障后，可切换到从数据库继续工作，一定程度上实现高可用。</p>
+<h4 id="主从复制的原理"><a href="#主从复制的原理" class="headerlink" title="主从复制的原理"></a>主从复制的原理</h4><img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/v2-12f36a0aa2ea88020809173182e54e73_r.jpg" class="" title="preview">
+
+<h4 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h4><img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220213349818.png" class="" title="image-20220220213349818">
+
+<h4 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h4><p> 进入/mydata/mysql-master/conf目录下新建my.cnf</p>
+<p>·     vim my.cnf            相当于配置文件</p>
+<p>在里面写入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">## 设置server_id，同一局域网中需要唯一</span><br><span class="line">server_id=101 </span><br><span class="line">## 指定不需要同步的数据库名称</span><br><span class="line">binlog-ignore-db=mysql  </span><br><span class="line">## 开启二进制日志功能</span><br><span class="line">log-bin=mall-mysql-bin  </span><br><span class="line">## 设置二进制日志使用内存大小（事务）</span><br><span class="line">binlog_cache_size=1M  </span><br><span class="line">## 设置使用的二进制日志格式（mixed,statement,row）</span><br><span class="line">binlog_format=mixed  </span><br><span class="line">## 二进制日志过期清理时间。默认值为0，表示不自动清理。</span><br><span class="line">expire_logs_days=7  </span><br><span class="line">## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</span><br><span class="line">## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</span><br><span class="line">slave_skip_errors=1062</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220214646298.png" class="" title="image-20220220214646298">
+
+<h4 id="1-3-修改完配置后重启master实例"><a href="#1-3-修改完配置后重启master实例" class="headerlink" title="1.3     修改完配置后重启master实例"></a>1.3     修改完配置后重启master实例</h4><p>·     docker restart mysql-master</p>
+<h4 id="1-4-进入mysql-master容器"><a href="#1-4-进入mysql-master容器" class="headerlink" title="1.4   进入mysql-master容器"></a>1.4   进入mysql-master容器</h4><p>·     docker exec -it mysql-master /bin/bash</p>
+<p>·     mysql -uroot -proot</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220215929141.png" class="" title="image-20220220215929141">
+
+<h4 id="1-5-master容器实例内创建数据同步用户"><a href="#1-5-master容器实例内创建数据同步用户" class="headerlink" title="1.5    master容器实例内创建数据同步用户"></a>1.5    master容器实例内创建数据同步用户</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">·	CREATE USER &#x27;slave&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;123456&#x27;;</span><br><span class="line">·	GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#x27;slave&#x27;@&#x27;%&#x27;;</span><br><span class="line">授予**上的复制从机和复制客户端权限</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220220208250.png" class="" title="image-20220220220208250">
+
+<h4 id="新建从服务器容器实例3308"><a href="#新建从服务器容器实例3308" class="headerlink" title="新建从服务器容器实例3308"></a>新建从服务器容器实例3308</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3308:3306 --name mysql-slave \传递</span><br><span class="line">-v /mydata/mysql-slave/log:/var/log/mysql \</span><br><span class="line">-v /mydata/mysql-slave/data:/var/lib/mysql \</span><br><span class="line">-v /mydata/mysql-slave/conf:/etc/mysql \</span><br><span class="line">-e MYSQL_ROOT_PASSWORD=root  \</span><br><span class="line">-d mysql:5.7</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220222042002.png" class="" title="image-20220220222042002">
+
+<h4 id="1-6配置文件"><a href="#1-6配置文件" class="headerlink" title="1.6配置文件"></a>1.6配置文件</h4><p>·     进入/mydata/mysql-slave/conf目录下新建my.cnf</p>
+<p>·     vim my.cnf</p>
+<p>[mysqld]</p>
+<p>## 设置server_id，同一局域网中需要唯一</p>
+<p>server_id=102</p>
+<p>## 指定不需要同步的数据库名称</p>
+<p>binlog-ignore-db=mysql  </p>
+<p>## 开启二进制日志功能，以备Slave作为其它数据库实例的Master时使用</p>
+<p>log-bin=mall-mysql-slave1-bin  </p>
+<p>## 设置二进制日志使用内存大小（事务）</p>
+<p>binlog_cache_size=1M  </p>
+<p>## 设置使用的二进制日志格式（mixed,statement,row）</p>
+<p>binlog_format=mixed  </p>
+<p>## 二进制日志过期清理时间。默认值为0，表示不自动清理。</p>
+<p>expire_logs_days=7  </p>
+<p>## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。</p>
+<p>## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致</p>
+<p>slave_skip_errors=1062  </p>
+<p>## relay_log配置中继日志</p>
+<p>relay_log=mall-mysql-relay-bin  </p>
+<p>## log_slave_updates表示slave将复制事件写进自己的二进制日志</p>
+<p>log_slave_updates=1  </p>
+<p>## slave设置为只读（具有super权限的用户除外）</p>
+<p>read_only=1</p>
+<p>·     修改完配置后重启slave实例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker restart mysql-slave</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220222711529.png" class="" title="image-20220220222711529">
+
+<h4 id="在主数据库中查看主从同步状态"><a href="#在主数据库中查看主从同步状态" class="headerlink" title="在主数据库中查看主从同步状态"></a>在主数据库中查看主从同步状态</h4><img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220222953684.png" class="" title="image-20220220222953684">
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-master /bin/bash</span><br><span class="line">mysql -uroot -proot</span><br><span class="line"> show master status;</span><br></pre></td></tr></table></figure>
+
+<h4 id="进入mysql-slave容器"><a href="#进入mysql-slave容器" class="headerlink" title="进入mysql-slave容器"></a>进入mysql-slave容器</h4><p>·     docker exec -it mysql-slave /bin/bash</p>
+<p>mysql -uroot -proot</p>
+<p>==问题==:突然之间不知道为什么mysql-save突然关闭了</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220230552008.png" class="" title="image-20220220230552008">
+
+
+
+<h4 id="在从数据库中配置主从复制"><a href="#在从数据库中配置主从复制" class="headerlink" title="在从数据库中配置主从复制"></a>在从数据库中配置主从复制</h4><p>change master to master_host=’宿主机192.168.220.128’, master_user=’slave’, master_password=’123456’, master_port=3307, master_log_file=’mall-mysql-bin.000001’, master_log_pos=617, master_connect_retry=30;</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220232741376.png" class="" title="image-20220220232741376">
+
+<p>·     主从复制命令参数说明</p>
+<p>master_host：主数据库的IP地址；</p>
+<p>master_port：主数据库的运行端口；</p>
+<p>master_user：在主数据库创建的用于同步数据的用户账号；</p>
+<p>master_password：在主数据库创建的用于同步数据的用户密码；</p>
+<p>master_log_file：指定从数据库要复制数据的日志文件，通过查看主数据的状态，获取File参数；</p>
+<p>master_log_pos：指定从数据库从哪个位置开始复制数据，通过查看主数据的状态，获取Position参数；</p>
+<p>master_connect_retry：连接失败重试的时间间隔，单位为秒。  </p>
+<h4 id="·-在从数据库中查看主从同步状态"><a href="#·-在从数据库中查看主从同步状态" class="headerlink" title="·     在从数据库中查看主从同步状态"></a>·     在从数据库中查看主从同步状态</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">·	show slave status \G;           </span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220233256682.png" class="" title="image-20220220233256682">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220233355897.png" class="" title="image-20220220233355897">
+
+<h4 id="在从数据库中开启主从同步"><a href="#在从数据库中开启主从同步" class="headerlink" title="在从数据库中开启主从同步"></a>在从数据库中开启主从同步</h4><img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220233502177.png" class="" title="image-20220220233502177">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220233532977.png" class="" title="image-20220220233532977">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220233847615.png" class="" title="image-20220220233847615">
+
+
+
+<p>·     主从复制测试</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220235207199.png" class="" title="image-20220220235207199">
+
+<p>从数据库</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220220235345217.png" class="" title="image-20220220235345217">
+
+
+
+<h3 id="2、安装Redis集群"><a href="#2、安装Redis集群" class="headerlink" title="2、安装Redis集群"></a>2、安装Redis集群</h3><p>·  1、哈希取余分区</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221000232782.png" class="" title="image-20220221000232782">
+
+<h5 id="一致性哈希算法分区："><a href="#一致性哈希算法分区：" class="headerlink" title="一致性哈希算法分区："></a>一致性哈希算法分区：</h5><p><strong>目的：</strong>    提出一致性Hash解决方案。 目的是当服务器个数发生变动时， 尽量减少影响客户端到服务器的映射关</p>
+<p> <strong>3大步骤</strong></p>
+<h5 id="2、-一致性哈希环"><a href="#2、-一致性哈希环" class="headerlink" title="2、==一致性哈希环=="></a>2、==一致性哈希环==</h5><p>  一致性哈希算法必然有个hash函数并按照算法产生hash值，这个算法的所有可能哈希值会构成一个全量集，这个集合可以成为一个hash空间[0,2^32-1]，这个是一个线性空间，但是在算法中，我们通过适当的逻辑控制将它首尾相连(0 = 2^32),这样让它逻辑上形成了一个环形空间。</p>
+<p>  它也是按照使用取模的方法，前面笔记介绍的节点取模法是对节点（服务器）的数量进行取模。而一致性Hash算法是对2^32取模，简单来说，一致性Hash算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数H的值空间为0-2^32-1（即哈希值是一个32位无符号整形），整个哈希环如下图：整个空间按顺时针方向组织，圆环的正上方的点代表0，0点右侧的第一个点代表1，以此类推，2、3、4、……直到2^32-1，也就是说0点左侧的第一个点代表2^32-1， 0和2^32-1在零点中方向重合，我们把这个由2^32个点组成的圆环称为Hash环。</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221001719424.png" class="" title="image-20220221001719424">
+
+<p>节点映射</p>
+<p>  将集群中各个IP节点映射到环上的某一个位置。</p>
+<p>  将各个服务器使用Hash进行一个哈希，具体可以选择服务器的IP或主机名作为关键字进行哈希，这样每台机器就能确定其在哈希环上的位置。</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221001853312.png" class="" title="image-20220221001853312">
+
+<p>·     key落到服务器的落键规则</p>
+<p>当我们需要存储一个kv键值对时，首先计算key的hash值，hash(key)，将这个key使用相同的函数Hash计算出哈希值并确定此数据在环上的位置，<strong>从此位置沿环顺时针<strong><strong>“</strong></strong>行走****”</strong>，第一台遇到的服务器就是其应该定位到的服务器，并将该键值对存储在该节点上。</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221002022031.png" class="" title="image-20220221002022031">
+
+<p>优点：容错性和扩展性</p>
+<p>缺点：由于节点少，出现数据倾斜问题</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221002648233.png" class="" title="image-20220221002648233">
+
+<h5 id="3、-哈希槽分区"><a href="#3、-哈希槽分区" class="headerlink" title="3、 哈希槽分区"></a>3、 哈希槽分区</h5><p>目的：为了解决一致性hash算法带来的数据倾斜问题</p>
+<p>哈希曹本质上是一个数组</p>
+<p>2 能干什么</p>
+<p>解决均匀分配的问题，在数据和节点之间又加入了一层，把这层称为哈希槽（slot），用于管理数据和节点之间的关系，现在就相当于节点上放的是槽，槽里放的是数据。</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image002.jpg" class="" title="graphic">
+
+<p>槽解决的是粒度问题，相当于把粒度变大了，这样便于数据移动。</p>
+<p>哈希解决的是映射问题，使用key的哈希值来计算所在的槽，便于数据分配。</p>
+<p>（我的理解就是，槽相当于很多个小方格，一个小方格有很多数据，而固定槽数又方便了与结点的对应关系。）</p>
+<p>结点与槽的映射</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221005314139.png" class="" title="image-20220221005314139">
+
+
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>命令说明</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221010448052.png" class="" title="image-20220221010448052">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221011023045.png" class="" title="image-20220221011023045">
+
+<p>数据存储</p>
+<h4 id="2-1开始安装"><a href="#2-1开始安装" class="headerlink" title="2.1开始安装"></a>2.1开始安装</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">·	systemctl start docker  打开docker，有防火墙记得关闭</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>docker run -d –name redis-node-1 –net host –privileged=true -v /data/redis/share/redis-node-1:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6381</p>
+<p>docker run -d –name redis-node-2 –net host –privileged=true -v /data/redis/share/redis-node-2:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6382</p>
+<p>docker run -d –name redis-node-3 –net host –privileged=true -v /data/redis/share/redis-node-3:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6383</p>
+<p>docker run -d –name redis-node-4 –net host –privileged=true -v /data/redis/share/redis-node-4:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6384</p>
+<p>docker run -d –name redis-node-5 –net host –privileged=true -v /data/redis/share/redis-node-5:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6385</p>
+<p>docker run -d –name redis-node-6 –net host –privileged=true -v /data/redis/share/redis-node-6:/data redis:6.0.8 –cluster-enabled yes –appendonly yes –port 6386</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221011200823.png" class="" title="image-20220221011200823">
+
+
+
+<h4 id="2-2·-进入容器redis-node-1并为6台机器构建集群关系"><a href="#2-2·-进入容器redis-node-1并为6台机器构建集群关系" class="headerlink" title="2.2·     进入容器redis-node-1并为6台机器构建集群关系"></a>2.2·     进入容器redis-node-1并为6台机器构建集群关系</h4><p>1、进入容器</p>
+<p>docker exec -it redis-node-1 /bin/bash</p>
+<p>2、构建主从关系</p>
+<p>==注意，进入docker容器后才能执行一下命令，且注意自己的真实IP地址==</p>
+<p>redis-cli –cluster create 192.168.220.128:6381 192.168.220.128:6382 192.168.220.128:6383 192.168.220.128:6384 192.168.220.128:6385 192.168.220.128:6386 –cluster-replicas 1 </p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221012446954.png" class="" title="image-20220221012446954">
+
+<p>–cluster-replicas 1 表示为每个master创建一个slave节点</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221012743663.png" class="" title="image-20220221012743663">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221104500863.png" class="" title="image-20220221104500863">
+
+<p>​    ####  2.3 链接进入6381作为切入点，查看集群状态</p>
+<p>​       Redis-cli -p 6381</p>
+<h4 id="2-4-链接进入6381作为切入点，查看节点状态"><a href="#2-4-链接进入6381作为切入点，查看节点状态" class="headerlink" title="2.4    链接进入6381作为切入点，查看节点状态"></a>2.4    链接进入6381作为切入点，查看节点状态</h4><p>​      cluster info</p>
+<p>​        cluster nodes</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221104933945.png" class="" title="image-20220221104933945">
+
+<h4 id="2-5主从容错切换迁移案例"><a href="#2-5主从容错切换迁移案例" class="headerlink" title="2.5主从容错切换迁移案例"></a>2.5主从容错切换迁移案例</h4><p>redis-cli -p 6381 -c</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221110707577.png" class="" title="image-20220221110707577">
+
+<h5 id="·-查看集群信息"><a href="#·-查看集群信息" class="headerlink" title="·     查看集群信息"></a>·     查看集群信息</h5><p>ctrl +c           退出redis</p>
+<p>  redis-cli  –cluster check 192.168.220.128:6381  </p>
+<h4 id="2-6容错切换迁移"><a href="#2-6容错切换迁移" class="headerlink" title="2.6容错切换迁移"></a>2.6容错切换迁移</h4><p>·     主6381和从机切换，先停止主机6381</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221113853389.png" class="" title="image-20220221113853389">
+
+<p>·     6381主机停了，对应的真实从机上位</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221114023249.png" class="" title="image-20220221114023249">
+
+
+
+<p>要想回到之前的，就先停掉从在开启从。</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221120507352.png" class="" title="image-20220221120507352">
+
+
+
+<h4 id="2-7主从扩容"><a href="#2-7主从扩容" class="headerlink" title="2.7主从扩容"></a>2.7主从扩容</h4><p>难点：在于hash槽的分配</p>
+<p>做法：</p>
+<p>1、新建6387、6388两个节点+新建后启动+查看</p>
+<table>
+<thead>
+<tr>
+<th>docker run -d  –name redis-node-7 –net host –privileged=true -v  /data/redis/share/redis-node-7:/data redis:6.0.8 –cluster-enabled yes  –appendonly yes –port 6387</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>docker run -d  –name redis-node-8 –net host –privileged=true -v  /data/redis/share/redis-node-8:/data redis:6.0.8 –cluster-enabled yes  –appendonly yes –port 6388</td>
+</tr>
+</tbody></table>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221122841300.png" class="" title="image-20220221122841300">
+
+<p>2、·     将新增的6387节点(空槽号)作为master节点加入原集群</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221123625718.png" class="" title="image-20220221123625718">
+
+<h6 id="问题：是不是都要访问第一个"><a href="#问题：是不是都要访问第一个" class="headerlink" title="==问题：是不是都要访问第一个=="></a>==问题：是不是都要访问第一个==</h6><p>3、重新分配槽号</p>
+<p>redis-cli –cluster reshard 192.168.220.128:6381    <strong>端口号应该为集群第一个</strong></p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221130922499.png" class="" title="image-20220221130922499">
+
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220221131157781.png" class="" title="image-20220221131157781">
+
+
+
+<p> 为6437设置从节点6388</p>
+<p>命令：redis-cli –cluster add-node ip:新slave端口 ip:新master端口 –cluster-slave –cluster-master-id 新主机节点ID</p>
+<p>redis-cli –cluster add-node 192.168.220.128:6388 192.168.220.128:6387 –cluster-slave –cluster-master-id e4781f644d4a4e4d4b4d107157b9ba8144631451——-这个是6387的编号，按照自己实际情况</p>
+<h4 id="2-8主从缩容案"><a href="#2-8主从缩容案" class="headerlink" title="2.8主从缩容案"></a>2.8主从缩容案</h4><p>1、·     检查集群情况1获得6388的节点ID（最好是从从节点开始删除）</p>
+<p>​               redis-cli  –cluster check 192.168.220.128:6382  </p>
+<p>2、·     将6388删除 从集群中将4号从节点6388删除</p>
+<p>命令：redis-cli –cluster del-node ip:从机端口 从机6388节点ID</p>
+<p>3、检查</p>
+<p>4.将6387的槽号清空，重新分配</p>
+<p>  redis-cli  –cluster reshard 192.168.111.147:6381  </p>
+<p>5、检查·     </p>
+<p>6、将6387删除</p>
+<p>命令：redis-cli –cluster del-node ip:端口 6387节点ID</p>
+<h3 id="3-DockerFile解析"><a href="#3-DockerFile解析" class="headerlink" title="3.  DockerFile解析"></a>3.  DockerFile解析</h3><h4 id="前提了解"><a href="#前提了解" class="headerlink" title="前提了解"></a>前提了解</h4><p>1、是什么</p>
+<p>·     Dockerfile是用来构建Docker镜像的文本文件，是由一条条构建镜像所需的指令和参数构成的脚本。</p>
+<p>2.来源</p>
+<p>·     <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/builder/">https://docs.docker.com/engine/reference/builder/</a></p>
+<p>3、·     构建三步骤</p>
+<p>​     编写Dockerfile文件</p>
+<p>  docker build命令构建镜像</p>
+<p>·  docker run依镜像运行容器实例·     FROM</p>
+<h4 id="1-DockerFile常用保留字指令"><a href="#1-DockerFile常用保留字指令" class="headerlink" title="1  DockerFile常用保留字指令"></a>1  DockerFile常用保留字指令</h4><p>·     基础镜像，当前新镜像是基于哪个镜像的，指定一个已经存在的镜像作为模板，第一条必须是from</p>
+<p>·     MAINTAINER</p>
+<p>·     镜像维护者的姓名和邮箱地址</p>
+<p>·     RUN</p>
+<p>·     容器构建时需要运行的命令</p>
+<p>·     两种格式</p>
+<p>·     shell格式</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image002-16454412566951.jpg" class="" title="graphic">
+
+<p>RUN yum -y install vim</p>
+<p>·     exec格式</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image004.jpg" class="" title="graphic">
+
+<p>·     RUN是在 docker build时运行</p>
+<p>·     EXPOSE</p>
+<p>·     当前容器对外暴露出的端口</p>
+<p>·     WORKDIR</p>
+<p>·     指定在创建容器后，终端默认登陆的进来工作目录，一个落脚点</p>
+<p>·     USER</p>
+<p>·     指定该镜像以什么样的用户去执行，如果都不指定，默认是root</p>
+<p>·     ENV</p>
+<p>​      用来在构建镜像过程中设置环境变量·     ADD</p>
+<p>·     将宿主机目录下的文件拷贝进镜像且会自动处理URL和解压tar压缩包</p>
+<p>·     COPY</p>
+<p>·     类似ADD，拷贝文件和目录到镜像中。 将从构建上下文目录中 &lt;源路径&gt; 的文件/目录复制到新的一层的镜像内的 &lt;目标路径&gt; 位置</p>
+<p>·     COPY src dest</p>
+<p>·     COPY [“src”, “dest”]</p>
+<p>·     &lt;src源路径&gt;：源文件或者源目录</p>
+<p>·     &lt;dest目标路径&gt;：容器内的指定路径，该路径不用事先建好，路径不存在的话，会自动创建。</p>
+<p>·     VOLUME</p>
+<p>·     容器数据卷，用于数据保存和持久化工作</p>
+<p>·     CMD</p>
+<p>·     指定容器启动后的要干的事情</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image002.gif" class="" title="graphic">
+
+<p>·     注意</p>
+<p>Dockerfile 中可以有多个 CMD 指令，但只有最后一个生效，CMD 会被 docker run 之后的参数替·     </p>
+<p>它和前面RUN命令的区别</p>
+<p> CMD是在docker run 时运行。</p>
+<p>RUN是在 docker build时运行</p>
+<p>·     ENTRYPOINT</p>
+<p>·     也是用来指定一个容器启动时要运行的命令</p>
+<p>·     类似于 CMD 指令，但是ENTRYPOINT不会被docker run后面的命令覆盖， 而且这些命令行参数会被当作参数送给 ENTRYPOINT 指令指定的程序</p>
+<p>·     命令格式和案例说明</p>
+<p>命令格式：<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image002-16454432138592.jpg" class="" title="graphic"></p>
+<p>ENTRYPOINT可以和CMD一起用，一般是变参才会使用 CMD ，这里的 CMD 等于是在给 ENTRYPOINT 传参。</p>
+<p>当指定了ENTRYPOINT后，CMD的含义就发生了变化，不再是直接运行其命令而是将CMD的内容作为参数传递给ENTRYPOINT指令，他两个组合会变成<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image003.jpg" class="" title="graphic"></p>
+<p>案例如下：假设已通过 Dockerfile 构建了 nginx:test 镜像：</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/clip_image004-16454432138643.jpg" class="" title="graphic">
+
+<table>
+<thead>
+<tr>
+<th>是否传参</th>
+<th>按照dockerfile编写执行</th>
+<th>传参运行</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Docker命令</td>
+<td>docker run   nginx:test</td>
+<td>docker run   nginx:test -c /etc/nginx/new.conf</td>
+</tr>
+<tr>
+<td>衍生出的实际命令</td>
+<td>nginx -c  /etc/nginx/nginx.conf</td>
+<td>nginx -c  /etc/nginx/new.conf</td>
+</tr>
+</tbody></table>
+<p>·     优点</p>
+<p>·     在执行docker run的时候可以指定 ENTRYPOINT 运行所需的参数。</p>
+<p>·     注意</p>
+<p>·     如果 Dockerfile 中如果存在多个 ENTRYPOINT 指令，仅最后一个生效。</p>
+<h4 id="2、构建centos之dockerfile"><a href="#2、构建centos之dockerfile" class="headerlink" title="2、构建centos之dockerfile"></a>2、构建centos之dockerfile</h4><h4 id="3、虚悬镜像"><a href="#3、虚悬镜像" class="headerlink" title="3、虚悬镜像"></a>3、虚悬镜像</h4><p>定义：·     仓库名、标签都是<none>的镜像，俗称dangling image</p>
+<p> 1、在系统中查看有误虚悬镜像</p>
+<p>·     docker image ls -f dangling=true</p>
+<p>2、删除</p>
+<p>docker image prune</p>
+<h3 id="4、docker-net"><a href="#4、docker-net" class="headerlink" title="4、docker net"></a>4、docker net</h3><p>这里简单说一下这三种网络模式</p>
+<p>+<strong>+第一种：桥接模式</strong></p>
+<p>使用桥接模式，虚拟机会获得与主机网络号相同的ip地址</p>
+<p>优点：在相同网络号下，其他主机（不一定是主机）可以访问我的主机上的虚拟机</p>
+<p>缺点：当同一网络下的主机很多时，会造成ip地址冲突（即ip地址不够用了）</p>
+<p><strong>NAT</strong>：</p>
+<p>NAT（Network Address Translator）是网络地址转换，它实现内网的IP地址与公网的地址之间的相互转换，将大量的内网IP地址转换为一个或少量的公网IP地址，减少对公网IP地址的占用</p>
+<p> <strong>仅主机模式</strong></p>
+<p>　　仅主机模式，是一种比NAT模式更加封闭的的网络连接模式，它将创建完全包含在主机中的专用网络</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220222141710681.png" class="" title="image-20220222141710681">
+
+<h4 id="1、docker网络三大默认配置"><a href="#1、docker网络三大默认配置" class="headerlink" title="1、docker网络三大默认配置"></a>1、docker网络三大默认配置</h4><img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220222142057158.png" class="" title="image-20220222142057158">
+
+
+
+<p>== <strong>问题：就是在host模式下我尝试启动两个tomcat</strong></p>
+<p><strong>第一个可以第二个却不可以=</strong>=</p>
+<h4 id="2、常用命令"><a href="#2、常用命令" class="headerlink" title="2、常用命令"></a>2、常用命令</h4><p>用法： docker network 参数</p>
+<img src="/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/image-20220222142639216.png" class="" title="image-20220222142639216">
+
+
+
+
+
+<h3 id="四、docker-compose-容器编排"><a href="#四、docker-compose-容器编排" class="headerlink" title="四、docker compose 容器编排"></a>四、docker compose 容器编排</h3><h4 id="1、前提"><a href="#1、前提" class="headerlink" title="1、前提"></a>1、前提</h4><p>1、是什么</p>
+<p>用于管理容器的，达到容器的统一管理</p>
+<p>2、主要是通过编写docker compose yml文件来实现</p>
+<p>3、下载</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://docs.docker.com/compose/install/">Install Docker Compose | Docker Documentation</a></p>
+<p>4、核心概念</p>
+<p>一要素：docker-compose.yml</p>
+<p>两服务：</p>
+<p>服务（server）：一个个容器实例</p>
+<p>项目（project）：一个个关联容器实例构成的完整义务单元</p>
+<h4 id="2、compose使用三大步骤"><a href="#2、compose使用三大步骤" class="headerlink" title="2、compose使用三大步骤"></a>2、compose使用三大步骤</h4>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -932,7 +1338,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
