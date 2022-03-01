@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="#  靶场搭建  1、初始化环境：由于是刚打开云服务器（腾讯云，ubuntu20.03） 所以首先 12ctrl +alt +t  进入到控制台sudo passwd root  设置密码  初始化docker 12cd  &#x2F;rootvi init.sh  在 init.sh编写（.sh文件是脚本文件） 12345678910">
+<meta property="og:type" content="article">
+<meta property="og:title" content="靶场搭建">
+<meta property="og:url" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#  靶场搭建  1、初始化环境：由于是刚打开云服务器（腾讯云，ubuntu20.03） 所以首先 12ctrl +alt +t  进入到控制台sudo passwd root  设置密码  初始化docker 12cd  &#x2F;rootvi init.sh  在 init.sh编写（.sh文件是脚本文件） 12345678910">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220224151017125.png">
+<meta property="og:image" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010001325.png">
+<meta property="og:image" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302005906224.png">
+<meta property="og:image" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010146552.png">
+<meta property="article:published_time" content="2022-03-01T17:03:19.000Z">
+<meta property="article:modified_time" content="2022-03-01T17:06:03.749Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220224151017125.png">
+
+<link rel="canonical" href="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>靶场搭建 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          靶场搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-02 01:03:19 / 修改时间：01:06:03" itemprop="dateCreated datePublished" datetime="2022-03-02T01:03:19+08:00">2022-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <pre><code>                                    #  靶场搭建
+</code></pre>
+<h2 id="1、初始化环境："><a href="#1、初始化环境：" class="headerlink" title="1、初始化环境："></a>1、初始化环境：</h2><p>由于是刚打开云服务器（腾讯云，ubuntu20.03）</p>
+<p>所以首先</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ctrl +alt +t  进入到控制台</span><br><span class="line">sudo passwd root  设置密码</span><br></pre></td></tr></table></figure>
+
+<p>初始化docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd  /root</span><br><span class="line">vi init.sh</span><br></pre></td></tr></table></figure>
+
+<p>在 init.sh编写（.sh文件是脚本文件）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#更新系统</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br><span class="line"></span><br><span class="line">#安装 docker和docker-compose</span><br><span class="line">sudo apt install docker docker-compose zip</span><br><span class="line"></span><br><span class="line">#设置镜像加速器    这里我没有买只能用别人的  也可以不用</span><br><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://faalpdo3.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>然后 增加权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod + x init.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2、搭建ctfd"><a href="#2、搭建ctfd" class="headerlink" title="2、搭建ctfd"></a>2、搭建ctfd</h2><h3 id="1、-开放端口"><a href="#1、-开放端口" class="headerlink" title="1、 开放端口"></a>1、 开放端口</h3><p> 在服务器面板里开放端口</p>
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220224151017125.png" class="" title="image-20220224151017125">
+
+<h3 id="2、拉取镜像"><a href="#2、拉取镜像" class="headerlink" title="2、拉取镜像"></a>2、拉取镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8000:8000 -d ctfd/ctfd</span><br><span class="line">这里没有镜像他会去拉取</span><br></pre></td></tr></table></figure>
+
+<p>然后去访问URL+开放的端口</p>
+<p>==这里注意如果是云服务器应该用公网ip，虚拟机直接用ifconfig查看==</p>
+<p>进入初始化界面后设置账号密码就可以了</p>
+<h3 id="3-进入到docker中"><a href="#3-进入到docker中" class="headerlink" title="3.进入到docker中"></a>3.进入到docker中</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps  查看id</span><br><span class="line">docker exec -it id /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4汉化ctfd"><a href="#4汉化ctfd" class="headerlink" title="4汉化ctfd"></a>4汉化ctfd</h3><p>下载汉化包</p>
+<p><strong>首先应该去到要下载的目录在执行命令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Guf/CTFd_chinese_CN.git</span><br><span class="line"></span><br><span class="line">切换到CTFd目录 删除主题</span><br><span class="line">rm -rf themes   文件夹删除命令</span><br><span class="line">然后把下载好的主题以及对应的版本cp过来，要下载刚才themes那个文件夹里面</span><br><span class="line">cp -r /opt/CTFd/CTFd_chinese_CN/V3.1.1/CTFd-3.1.1/CTFd/themes /opt/CTFd      应该是这个忘记截图了</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、出题"><a href="#三、出题" class="headerlink" title="三、出题"></a>三、出题</h2><h3 id="1、编写dockerfile"><a href="#1、编写dockerfile" class="headerlink" title="1、编写dockerfile"></a>1、编写dockerfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我是在root目录下创建文件夹里面创建dockerfile</span><br><span class="line">mkdir text</span><br><span class="line">cd text</span><br><span class="line">touch Dockerfile</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">复制这段  适当改一下</span><br><span class="line">FROM sakadonohito/php5.6.23-apache</span><br><span class="line"></span><br><span class="line">LABEL Author=&quot;space&quot;</span><br><span class="line"></span><br><span class="line">COPY ./src/ /var/www/html/</span><br><span class="line"></span><br><span class="line">RUN chmod -R 755 /var/www/html/ &amp;&amp; \</span><br><span class="line">    chown -R root:root /var/www/html </span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD sh -c &quot;apache2-foreground&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、创建src目录"><a href="#2、创建src目录" class="headerlink" title="2、创建src目录"></a>2、创建src目录</h3><p>要在dockerfile文件所在的目录下创建</p>
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010001325.png" class="" title="image-20220302010001325">
+
+<h3 id="3-运行docker"><a href="#3-运行docker" class="headerlink" title="3.运行docker"></a>3.运行docker</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t trick:v3 .   // .的意思是把当前目录下的文件都给打包</span><br><span class="line">这里容器名称为 trick 版本为v3</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 7000:80 -d trick:v3</span><br><span class="line">运行这个容器</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302005906224.png" class="" title="image-20220302005906224">
+
+
+
+
+
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010146552.png" class="" title="image-20220302010146552">
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/25/git%E5%AD%A6%E4%B9%A01/" rel="prev" title="git学习1">
+      <i class="fa fa-chevron-left"></i> git学习1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/" rel="next" title="伪协议学习">
+      伪协议学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E7%8E%AF%E5%A2%83%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1、初始化环境：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E6%90%AD%E5%BB%BActfd"><span class="nav-number">2.</span> <span class="nav-text">2、搭建ctfd</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81-%E5%BC%80%E6%94%BE%E7%AB%AF%E5%8F%A3"><span class="nav-number">2.1.</span> <span class="nav-text">1、 开放端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">2.2.</span> <span class="nav-text">2、拉取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%9B%E5%85%A5%E5%88%B0docker%E4%B8%AD"><span class="nav-number">2.3.</span> <span class="nav-text">3.进入到docker中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E6%B1%89%E5%8C%96ctfd"><span class="nav-number">2.4.</span> <span class="nav-text">4汉化ctfd</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%87%BA%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">三、出题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%BC%96%E5%86%99dockerfile"><span class="nav-number">3.1.</span> <span class="nav-text">1、编写dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%88%9B%E5%BB%BAsrc%E7%9B%AE%E5%BD%95"><span class="nav-number">3.2.</span> <span class="nav-text">2、创建src目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%90%E8%A1%8Cdocker"><span class="nav-number">3.3.</span> <span class="nav-text">3.运行docker</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

