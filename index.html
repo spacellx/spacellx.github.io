@@ -145,6 +145,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/16/wajue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/16/wajue/" class="post-title-link" itemprop="url">wajue</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-16 23:09:03" itemprop="dateCreated datePublished" datetime="2022-10-16T23:09:03+08:00">2022-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-17 00:24:48" itemprop="dateModified" datetime="2022-10-17T00:24:48+08:00">2022-10-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="挖洞体验"><a href="#挖洞体验" class="headerlink" title="挖洞体验"></a>挖洞体验</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>1、因为技术不行，所以把重心放在短信轰炸，xss，未授权这几个方面。</p>
+<p>所以在用oneforall挖掘子域名的时候，比较关注登录界面，找回密码，以及一些用户可以输入的界面吧。</p>
+<h2 id="第一个：（失败）"><a href="#第一个：（失败）" class="headerlink" title="第一个：（失败）"></a>第一个：（失败）</h2><p>一开始我是从网上服务大厅找到校园网的</p>
+<img src="/2022/10/16/wajue/image-20221016232632998.png" class="" title="image-20221016232632998">
+
+
+
+<p>通过抓包可以发现，直接将学号放在url传到后台，并且直接通过学号，拿到手机号并发送验证码。同时可以改学号，把验证码发给别人。但是大概发了五六次就不行了。会被限制一天都不能通过短信找回密码。后来想，这会不会影响到找回其他的密码比如统一身份证的，但后面发现不会影响。后面看到别人发文章说这里存在短信轰炸，我还以为是我没测试好，后来经过沟通好，发现他情况和我的是一样的</p>
+<img src="/2022/10/16/wajue/image-20221016232611154.png" class="" title="image-20221016232611154">
+
+
+
+<h2 id="第二个：失败"><a href="#第二个：失败" class="headerlink" title="第二个：失败"></a>第二个：失败</h2><p>后面开着xray 用插件检查xss。着重看了那些可以提交用户输入的功能，比如外出备案，调查问卷，还有快递代收，以及图书馆的个人信息更新</p>
+<img src="/2022/10/16/wajue/image-20221016233551120.png" class="" title="image-20221016233551120">
+
+<img src="/2022/10/16/wajue/image-20221016233610014.png" class="" title="image-20221016233610014">
+
+<img src="/2022/10/16/wajue/image-20221016233652909.png" class="" title="image-20221016233652909">
+
+
+
+<p>对那些能够输入，测试xss，但是没用。最后看xray，好像发现有两个地方存在xss。然后对这个两个地方测试，发现没测出来。。。。。。。</p>
+<img src="/2022/10/16/wajue/image-20221016233759924.png" class="" title="image-20221016233759924">
+
+
+
+<h2 id="第三个：失败"><a href="#第三个：失败" class="headerlink" title="第三个：失败"></a>第三个：失败</h2><img src="/2022/10/16/wajue/image-20221017002115642.png" class="" title="image-20221017002115642">
+
+<p>这里，由于是先向后端发送请求，验证码正确后，服务端会在发送包含sign值的包，前端再把sign值和电话等发给后端，最后发送短信。虽然数据没有经过js加密，但是无论改其中哪一个都会失败。而且sign是一次性的，</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/10/08/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1596,96 +1689,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/%E6%BC%8F%E6%B4%9E/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/19/%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-19 18:25:06" itemprop="dateCreated datePublished" datetime="2022-04-19T18:25:06+08:00">2022-04-19</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h1><p>漏洞成因,</p>
-<p>1、安全漏洞</p>
-<p>安全漏洞是程序在编码时不够严谨，或者对安全考虑不周出现的漏洞 比如缓冲区溢出漏洞</p>
-<p>2、设计漏洞</p>
-<p>主要是指软硬件，固件在设计的时候对安全考虑不周出现的</p>
-<p>3、配置漏洞</p>
-<p>主要是由于软件的默认配置或者配置不周导致的漏洞</p>
-<p>漏洞分类：</p>
-<p>1、系统漏洞</p>
-<p>主要是针对操作系统，或者通用性很强的软件的漏洞</p>
-<p>2、web应用漏洞</p>
-<p>主要是针对web服务器的漏洞，通过web漏洞拿下web网站，进而提权拿下服务器</p>
-<p>系统漏洞扫描流程</p>
-<p><img src="D:\boke\source_posts\SQL注入\image-20220419155500984.png" alt="image-20220419155500984"></p>
-<p>1、首先进行存活判断</p>
-<p>  即判断主机是否存活（开机）</p>
-<p>2、进行端口扫描</p>
-<p>  端口就相当于房子的大门，我们首先必须确定开启了那些端口，开启了那些服务，才能进行下一步的利用</p>
-<p>3、服务识别</p>
-<p> 就是通过开启的端口来判断开启了什么服务，通过一些常见的端口</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3306      mysql</span><br><span class="line">22        ssh</span><br><span class="line">7701 </span><br><span class="line">8080      tomcat</span><br></pre></td></tr></table></figure>
-
-<p>服务识别有分为</p>
-<p>1、指纹识别</p>
-<p>2、banner识别</p>
-<p>4、识别系统</p>
-<p>对主机的系统进行识别</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -o  可以进行识别</span><br></pre></td></tr></table></figure>
-
-<h2 id="web漏洞扫描流程"><a href="#web漏洞扫描流程" class="headerlink" title="web漏洞扫描流程"></a>web漏洞扫描流程</h2><p><img src="D:\boke\source_posts\SQL注入\image-20220419160534245.png" alt="image-20220419160534245"></p>
-<p><img src="D:\boke\source_posts\SQL注入\image-20220419160743002.png" alt="image-20220419160743002"></p>
-<h3 id="awvs报告解读"><a href="#awvs报告解读" class="headerlink" title="awvs报告解读"></a>awvs报告解读</h3><p>抓住这几点</p>
-<p><img src="D:\boke\source_posts\SQL注入\image-20220419162744727.png" alt="image-20220419162744727"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1755,7 +1758,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

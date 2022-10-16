@@ -145,6 +145,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/19/%E6%BC%8F%E6%B4%9E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/19/%E6%BC%8F%E6%B4%9E/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-19 18:25:06" itemprop="dateCreated datePublished" datetime="2022-04-19T18:25:06+08:00">2022-04-19</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h1><p>漏洞成因,</p>
+<p>1、安全漏洞</p>
+<p>安全漏洞是程序在编码时不够严谨，或者对安全考虑不周出现的漏洞 比如缓冲区溢出漏洞</p>
+<p>2、设计漏洞</p>
+<p>主要是指软硬件，固件在设计的时候对安全考虑不周出现的</p>
+<p>3、配置漏洞</p>
+<p>主要是由于软件的默认配置或者配置不周导致的漏洞</p>
+<p>漏洞分类：</p>
+<p>1、系统漏洞</p>
+<p>主要是针对操作系统，或者通用性很强的软件的漏洞</p>
+<p>2、web应用漏洞</p>
+<p>主要是针对web服务器的漏洞，通过web漏洞拿下web网站，进而提权拿下服务器</p>
+<p>系统漏洞扫描流程</p>
+<p><img src="D:\boke\source_posts\SQL注入\image-20220419155500984.png" alt="image-20220419155500984"></p>
+<p>1、首先进行存活判断</p>
+<p>  即判断主机是否存活（开机）</p>
+<p>2、进行端口扫描</p>
+<p>  端口就相当于房子的大门，我们首先必须确定开启了那些端口，开启了那些服务，才能进行下一步的利用</p>
+<p>3、服务识别</p>
+<p> 就是通过开启的端口来判断开启了什么服务，通过一些常见的端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">3306      mysql</span><br><span class="line">22        ssh</span><br><span class="line">7701 </span><br><span class="line">8080      tomcat</span><br></pre></td></tr></table></figure>
+
+<p>服务识别有分为</p>
+<p>1、指纹识别</p>
+<p>2、banner识别</p>
+<p>4、识别系统</p>
+<p>对主机的系统进行识别</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -o  可以进行识别</span><br></pre></td></tr></table></figure>
+
+<h2 id="web漏洞扫描流程"><a href="#web漏洞扫描流程" class="headerlink" title="web漏洞扫描流程"></a>web漏洞扫描流程</h2><p><img src="D:\boke\source_posts\SQL注入\image-20220419160534245.png" alt="image-20220419160534245"></p>
+<p><img src="D:\boke\source_posts\SQL注入\image-20220419160743002.png" alt="image-20220419160743002"></p>
+<h3 id="awvs报告解读"><a href="#awvs报告解读" class="headerlink" title="awvs报告解读"></a>awvs报告解读</h3><p>抓住这几点</p>
+<p><img src="D:\boke\source_posts\SQL注入\image-20220419162744727.png" alt="image-20220419162744727"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/16/sql%E6%B3%A8%E5%85%A5%E2%80%94%E2%80%94sqlmap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1609,90 +1699,6 @@ payload:index.php?r=backdoor/shell&code=poc
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">伪协议学习</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-03-02 01:07:36 / 修改时间：01:21:20" itemprop="dateCreated datePublished" datetime="2022-03-02T01:07:36+08:00">2022-03-02</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="伪协议学习"><a href="#伪协议学习" class="headerlink" title="伪协议学习"></a>伪协议学习</h1><h1 id="伪协议的学习"><a href="#伪协议的学习" class="headerlink" title="伪协议的学习"></a><a target="_blank" rel="noopener" href="https://www.cnblogs.com/-an-/p/12372220.html">伪协议的学习</a></h1><p>伪协议常常用于文件包含漏洞之中。</p>
-<p>在php中能够造成文件包含的函数有include、require、include_once、require_once、highlight_file、show_source、file_get_contents、fopen、file、readfile</p>
-<h2 id="0x01-函数"><a href="#0x01-函数" class="headerlink" title="0x01 函数"></a><strong>0x01 函数</strong></h2><h3 id="1-include函数"><a href="#1-include函数" class="headerlink" title="1.include函数"></a><strong>1.include函数</strong></h3><p>可以放在PHP脚本的任意位置，一般放在流程控制的处理部分中。当PHP脚本执行到include指定引入的文件时，才将它包含并尝试执行。这种方式可以把程序执行时的流程进行简单化。当第二次遇到相同文件时，PHP还是会重新解释一次，include相对于require的执行效率下降很多，同时在引入文件中包含用户自定义函数时，PHP在解释过程中会发生函数重复定义问题。include载入成功后，返回1，失败则返回false。</p>
-<h3 id="2-require函数"><a href="#2-require函数" class="headerlink" title="2.require函数"></a><strong>2.require函数</strong></h3><p>require函数一般放在PHP脚本的最前面，PHP执行前就会先读入require指定引入的文件，包含并尝试执行引入的脚本文件。require的工作方式是提高PHP的执行效率，当它在同一个网页中解释过一次后，第二次便不会解释。但同样的，正因为它不会重复解释引入文件，所以当PHP中使用循环或条件语句来引入文件时，需要用到include。require载入成功返回1，失败无返回值。</p>
-<h3 id="3-include-once和require-once函数"><a href="#3-include-once和require-once函数" class="headerlink" title="3.include_once和require_once函数"></a><strong>3.include_once和require_once函数</strong></h3><p>分别与require / include作用相同，不同的是他们在执行到时会先检查目标内容是不是在之前已经导入过，如果导入过了，那么便不会再次重复引入其同样的内容。</p>
-<h3 id="4-highlight-file函数"><a href="#4-highlight-file函数" class="headerlink" title="4.highlight_file函数"></a><strong>4.highlight_file函数</strong></h3><p>highlight_file() 函数对文件进行语法高亮显示。</p>
-<p>语法：highlight_file(filename,return) —— filename：必需。要进行高亮处理的 PHP 文件的路径。return：可选。如果设置 true，则本函数返回高亮处理的代码。</p>
-<p>该函数通过使用 PHP 语法高亮程序中定义的颜色，输出或返回包含在 filename 中的代码的语法高亮版本。如果 return 参数被设置为 true，那么该函数会返回被高亮处理的代码，而不是输出它们。否则，若成功，则返回 true，失败则返回 false。许多服务器被配置为对带有 phps 后缀的文件进行自动高亮处理。例如，在查看 example.phps 时，将显示该文件被语法高亮显示的源代码。要启用该功能，请把AddType application/x-httpd-php-source .phps添加到 httpd.conf。</p>
-<h3 id="5-show-source函数"><a href="#5-show-source函数" class="headerlink" title="5.show_source函数"></a><strong>5.show_source函数</strong></h3><p>该函数是highlight_file函数的别名。</p>
-<h3 id="6-file-get-contents函数"><a href="#6-file-get-contents函数" class="headerlink" title="6.file_get_contents函数"></a><strong>6.file_get_contents函数</strong></h3><p>file_get_contents() 函数把整个文件读入一个字符串中。和 file() 一样，不同的是 file_get_contents() 把文件读入一个字符串。file_get_contents() 函数是用于将文件的内容读入到一个字符串中的首选方法。如果操作系统支持，还会使用内存映射技术来增强性能。</p>
-<img src="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/1884723-20200227145402957-11433424.png" class="" title="img">
-
-<h3 id="7-file函数"><a href="#7-file函数" class="headerlink" title="7.file函数"></a><strong>7.file函数</strong></h3><p>file() 函数把整个文件读入一个数组中。与 file_get_contents() 类似，不同的是 file() 将文件作为一个数组返回。数组中的每个单元都是文件中相应的一行，包括换行符在内。如果失败，则返回 false。</p>
-<img src="/2022/03/02/%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0/1884723-20200227145546672-1410880982.png" class="" title="img">
-
-<h3 id="8-fopen函数"><a href="#8-fopen函数" class="headerlink" title="8.fopen函数"></a><strong>8.<a target="_blank" rel="noopener" href="https://www.runoob.com/php/func-filesystem-fopen.html">fopen函数</a></strong></h3><h3 id="9-readfile函数"><a href="#9-readfile函数" class="headerlink" title="9.readfile函数"></a><strong>9.<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/php/func_filesystem_readfile.asp">readfile函数</a></strong></h3><h2 id="0x02-伪协议"><a href="#0x02-伪协议" class="headerlink" title="0x02 伪协议"></a><strong>0x02 伪协议</strong></h2><h3 id="1-php伪协议："><a href="#1-php伪协议：" class="headerlink" title="1.php伪协议："></a><strong>1.php伪协议：</strong></h3><p>需要开启allow_url_fopen的：php://input、php://stdin、php://memory和php://temp</p>
-<p>不需要开启allow_wrl_fopen的：php://filter</p>
-<p>在CTF中经常使用的是php://filter和php://input</p>
-<p><strong>php://filter用于读取源码，php://input用于执行php代码</strong></p>
-<p>==<strong>php://input需要post请求提交数据</strong>==</p>
-<p><strong>php://filter可以get提交?a=php://filter/read=convert.base64-encode/resource=xxx.php ==</strong></p>
-<h3 id="2-data协议"><a href="#2-data协议" class="headerlink" title="2.data协议"></a><strong>2.data协议</strong></h3><p>php5.2.0起，数据流封装器开始有效，主要用于数据流的读取。如果传入的数据是PHP代码，就会执行代码</p>
-<p>使用方法:data://text/plain;base64,xxxx(base64编码后的数据)</p>
-<p>data伪协议只有在php&lt;5.3且include=on时可以写木马。</p>
-<h3 id="3-file协议"><a href="#3-file协议" class="headerlink" title="3.file协议"></a><strong>3.file协议</strong></h3><p>file://用于访问本地文件系统</p>
-<p>用法：file:// [文件的绝对路径和文件名]</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1762,7 +1768,7 @@ payload:index.php?r=backdoor/shell&code=poc
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
